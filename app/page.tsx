@@ -1,58 +1,41 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
-
-export const Question = (question: any) => {
-  const questionsAnswers = useMemo(() => {
-    return question.question.alternatives.map((q) => (
-      <Button className='cursor-pointer '>{q.text}</Button>
-    ));
-  }, [question]);
-
-  console.log(111);
-
-  return (
-    <div className='p-5'>
-      <div className='question-header'>
-        <h1 className='whitespace-pre-line text-base leading-relaxed text-gray-800 font-bold'>
-          {question.question.title}
-        </h1>
-        <span className='block w-fit p-2 my-2 bg-green-400 rounded-lg text-xs'>
-          Disciplina: {question.question.discipline}
-        </span>
-        <div className='context max-h-100 overflow-hidden overflow-y-auto whitespace-pre-line text-base leading-relaxed text-gray-800'>
-          <p className='text-center block w-auto h-auto'>
-            {question.question.context}
-          </p>
-          <p className='text-center block w-auto h-auto'>
-            {question.question.alternativesIntroduction}
-          </p>
-        </div>
-      </div>
-      <div className='question-answer grid grid-cols-2 gap-4 p-5'>
-        {questionsAnswers}
-      </div>
-    </div>
-  );
-};
+import Link from 'next/link';
 
 export default function Home() {
-  const [step, setStep] = useState(1);
-  const { data, isLoading } = useQuery({
-    queryKey: ['questions'],
-    queryFn: () =>
-      fetch('https://api.enem.dev/v1/exams/2023/questions?limit=50').then(
-        (res) => res.json()
-      ),
-  });
+  const years = [
+    '2015',
+    '2016',
+    '2017',
+    '2018',
+    '2019',
+    '2020',
+    '2021',
+    '2022',
+    '2023',
+  ];
 
-  console.log(data);
-
-  if (isLoading) return <p>Loading...</p>;
   return (
-    <div>
-      <Question question={data.questions[step]} />
+    <div className='bg-red container m-auto'>
+      <h1 className='my-5 text-gray-900 text-6xl p-5 text-center'>
+        Simul<span className='text-fuchsia-500 italic bold'>AI</span>
+      </h1>
+      <p className='w-3xl m-auto text-xl'>
+        Cansado de estudar para o ENEM com PDFs bagunçados e gabaritos perdidos?
+        O SimulaAI é a sua solução definitiva para o treino inteligente. Nós
+        pegamos todas as provas do ENEM (2015–2025) e as transformamos em um
+        arsenal de questões perfeitamente estruturadas.
+      </p>
+      <div className='mt-10 w-3xl m-auto flex gap-2 flex-wrap'>
+        {years.map((year) => (
+          <Link href={`/exams/${year}`}>
+            <Button className='cursor-pointer' size='xl' variant='outline'>
+              Enem - Ano {year}
+            </Button>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
