@@ -1,8 +1,21 @@
 'use client';
 import './globals.css';
 import { useState } from 'react';
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Lexend, Niconne } from 'next/font/google';
+
+const fontLexend = Lexend({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-lexend', 
+});
+
+const fontNiconne = Niconne({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-niconne', 
+  weight: ["400"],
+});
 
 export default function RootLayout({
   children,
@@ -13,15 +26,7 @@ export default function RootLayout({
 
   return (
     <html lang='en'>
-      <head>
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' />
-        <link
-          href='https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap'
-          rel='stylesheet'
-        />
-      </head>
-      <body className={`antialiased font-serif`}>
+      <body className={`${fontLexend.variable} ${fontNiconne.variable}`}>
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

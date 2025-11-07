@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}', 
@@ -7,12 +9,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Lexend', 'sans-serif'], 
-        sans: ['Lexend', 'sans-serif'],
-        // Exemplo: se quisesse substituir a sans padrão:
-        // sans: ['Lexend, sans-serif', 'sans-serif'],
-        // Exemplo: se quisesse substituir a sans padrão:
-     
+        sans: ['var(--font-lexend)', ...fontFamily.sans], 
+        display: ['var(--font-niconne)', ...fontFamily.serif]
       },
     },
   },

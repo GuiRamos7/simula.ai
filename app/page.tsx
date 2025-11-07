@@ -17,25 +17,20 @@ export default function Home() {
   ];
 
   return (
-    <div className='bg-red container m-auto'>
-      <h1 className='my-5 text-gray-900 text-6xl p-5 text-center'>
-        Simul<span className='text-fuchsia-500 italic bold'>AI</span>
-      </h1>
-      <p className='w-3xl m-auto text-xl'>
-        Cansado de estudar para o ENEM com PDFs bagunçados e gabaritos perdidos?
-        O SimulaAI é a sua solução definitiva para o treino inteligente. Nós
-        pegamos todas as provas do ENEM (2015–2025) e as transformamos em um
-        arsenal de questões perfeitamente estruturadas.
-      </p>
-      <div className='mt-10 w-3xl m-auto flex gap-2 flex-wrap'>
-        {years.map((year) => (
-          <Link href={`/exams/${year}`}>
-            <Button className='cursor-pointer' size='xl' variant='outline'>
-              Enem - Ano {year}
-            </Button>
-          </Link>
-        ))}
-      </div>
+    <div className='w-screen h-screen '>
+      <header className='p-1 border-b-2 md:w-full border-input w-container lg:w-5/6 m-auto flex justify-between items-center'>
+        <h1 className='text-3xl bold'>
+          Simula<span className='italic text-pink-500 ai bold text-5xl'>.ai</span>
+        </h1>
+        <ul className='h-fit flex gap-3'>
+          <li>
+            <Link  className='text-base' href='/'>Sobre</Link>
+          </li>
+          <li>
+            <Link  className='text-base' href='/'>Contato</Link>
+          </li>
+        </ul>
+      </header>
     </div>
   );
 }
