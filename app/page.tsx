@@ -1,36 +1,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import Link from 'next/link';
 
 export default function Home() {
   return (
     <div className="h-screen w-screen">
-      <header className="border-input w-container m-auto flex items-center justify-between border-b-2 p-1 md:w-full lg:w-5/6">
-        <h1 className="bold text-3xl">
-          Simula
-          <span className="ai bold text-5xl text-pink-500 italic">.ai</span>
-        </h1>
-        <ul className="flex h-fit gap-3">
-          <li>
-            <Link className="text-base" href="/">
-              Sobre
-            </Link>
-          </li>
-          <li>
-            <Link className="text-base" href="/">
-              Contato
-            </Link>
-          </li>
-          <li>
-            <Switch />
-          </li>
-        </ul>
-      </header>
-
-      <main className="m-auto w-5/6 lg:mt-[200px]">
-        <h1 className="text-foreground text-center text-7xl font-bold">
+      <main className="mx-auto mt-8 w-5/6 sm:mt-12 md:mt-20 lg:mt-40">
+        <h1 className="text-foreground block text-center text-4xl font-bold sm:pt-9 sm:text-5xl md:pt-6 md:text-6xl lg:text-7xl">
           Domine o ENEM. <br /> Pratique com provas reais.
         </h1>
         <p className="m-auto mt-10 text-center text-2xl md:w-full lg:w-5xl">

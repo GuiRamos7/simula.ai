@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Lexend, Niconne } from 'next/font/google';
 import { ThemeProvider } from './providers/ThemeContext';
+import { Header } from '@/components/ui/header';
 
 const fontLexend = Lexend({
   subsets: ['latin'],
@@ -30,7 +31,10 @@ export default function RootLayout({
       <ThemeProvider>
         <body className={`${fontLexend.variable} ${fontNiconne.variable}`}>
           <QueryClientProvider client={queryClient}>
-            {children}
+            <>
+              <Header />
+              {children}
+            </>
           </QueryClientProvider>
         </body>
       </ThemeProvider>
