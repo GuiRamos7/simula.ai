@@ -27,23 +27,16 @@ export type Question = {
 export type QuestionProps = {
   question: Question;
   onConfirmSelect: (selected: 'A' | 'B' | 'C' | 'D' | 'E') => void;
-  params: {
-    year: string;
-  };
 };
 
-export const Question = ({
-  question,
-  onConfirmSelect,
-  params,
-}: QuestionProps) => {
+export const Question = ({ question, onConfirmSelect }: QuestionProps) => {
   const [answerSelected, setAnswerSelected] = useState<
     null | 'A' | 'B' | 'C' | 'D' | 'E'
   >(null);
 
   const renderFiles = useMemo(() => {
     return question.files.map((questionFile) => (
-      <img className='mb-5 max-w-[400px] self-center' src={questionFile} />
+      <img className="mb-5 max-w-[400px] self-center" src={questionFile} />
     ));
   }, [question]);
 
@@ -57,8 +50,8 @@ export const Question = ({
         className={`cursor-pointer border-3 ${
           q.letter === answerSelected ? 'border-indigo-500' : ''
         }`}
-        size='custom-xl'
-        variant='outline'
+        size="custom-xl"
+        variant="outline"
       >
         {q.letter}) {q.text}
       </Button>
@@ -66,20 +59,20 @@ export const Question = ({
   }, [question, answerSelected]);
 
   return (
-    <div className='p-5 w-fit flex gap-5 m-auto'>
-      <div className='question-header flex-1 max-w-2xl'>
-        <h1 className='mb-10 whitespace-pre-line text-base leading-relaxed text-gray-800 font-bold'>
+    <div className="m-auto flex w-fit gap-5 p-5">
+      <div className="question-header max-w-2xl flex-1">
+        <h1 className="mb-10 text-base leading-relaxed font-bold whitespace-pre-line text-gray-800">
           {question.title}
         </h1>
-        <div className='flex flex-col items-center context max-h-[80vh] overflow-hidden overflow-y-auto whitespace-pre-line text-base leading-relaxed text-gray-800'>
-          <div className='files w-fit '>{renderFiles}</div>
-          <p className='block w-auto h-auto text-lg'>
+        <div className="context flex max-h-[80vh] flex-col items-center overflow-hidden overflow-y-auto text-base leading-relaxed whitespace-pre-line text-gray-800">
+          <div className="files w-fit">{renderFiles}</div>
+          <p className="block h-auto w-auto text-lg">
             {question.alternativesIntroduction}
           </p>
         </div>
       </div>
 
-      <div className='question-answer flex flex-col gap-4 p-5 w-md'>
+      <div className="question-answer flex w-md flex-col gap-4 p-5">
         {questionsAnswers}
       </div>
     </div>
@@ -93,7 +86,7 @@ export default function Home() {
     queryKey: ['questions'],
     queryFn: () =>
       fetch(`https://api.enem.dev/v1/exams/${year}/questions?limit=50`).then(
-        (res) => res.json()
+        (res) => res.json(),
       ),
   });
 
@@ -110,7 +103,7 @@ export default function Home() {
         : [resposta];
       localStorage.setItem('respostas', JSON.stringify([...answers]));
     },
-    [step]
+    [step],
   );
 
   if (isLoading) return <p>Loading...</p>;
@@ -122,17 +115,4 @@ export default function Home() {
       />
     </div>
   );
-}
-
-{
-  /* {answerSelected ? (
-        <Button
-          className='w-full'
-          onClick={() => onConfirmSelect(answerSelected)}
-        >
-          CONFIRMAR
-        </Button>
-      ) : (
-        ''
-      )} */
 }
