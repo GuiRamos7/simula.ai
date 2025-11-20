@@ -1,10 +1,9 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { CircleIcon } from "lucide-react"
-
-import { cn } from "@/lib/utils"
+import * as React from 'react';
+import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
+import { CircleIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 function RadioGroup({
   className,
@@ -13,10 +12,10 @@ function RadioGroup({
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
-      className={cn("grid gap-3", className)}
+      className={cn('grid gap-3', className)}
       {...props}
     />
-  )
+  );
 }
 
 function RadioGroupItem({
@@ -27,8 +26,11 @@ function RadioGroupItem({
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
       className={cn(
-        "border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
-        className
+        'aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none',
+        // pink-500 styles
+        'border-pink-500 text-pink-500 focus-visible:border-pink-500 focus-visible:ring-pink-500/50',
+        'data-[state=checked]:bg-pink-500 data-[state=checked]:text-white',
+        className,
       )}
       {...props}
     >
@@ -36,10 +38,10 @@ function RadioGroupItem({
         data-slot="radio-group-indicator"
         className="relative flex items-center justify-center"
       >
-        <CircleIcon className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
+        <CircleIcon className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white text-white" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
-  )
+  );
 }
 
-export { RadioGroup, RadioGroupItem }
+export { RadioGroup, RadioGroupItem };
