@@ -44,6 +44,7 @@ export default function Settings() {
   const { actions, feedbackOption, timerOption, yearOption } =
     useSettingsForm();
 
+
   if (isLoading) return <SettingsLoadingSkeleton />;
 
   const examYears = (data && data.map((exam: Exam) => exam.year)) ?? [];

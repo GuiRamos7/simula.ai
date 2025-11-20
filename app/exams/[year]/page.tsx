@@ -34,6 +34,7 @@ export const Question = ({ question, onConfirmSelect }: QuestionProps) => {
     null | 'A' | 'B' | 'C' | 'D' | 'E'
   >(null);
 
+
   const renderFiles = useMemo(() => {
     return question.files.map((questionFile) => (
       <img className="mb-5 max-w-[400px] self-center" src={questionFile} />
@@ -89,6 +90,9 @@ export default function Home() {
         (res) => res.json(),
       ),
   });
+
+  console.log(data);
+
 
   const onConfirmSelect = useCallback(
     (resposta: string) => {
