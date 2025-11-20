@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Exam } from '../../types';
 
 type YearSelectProps = {
   data: string[] | undefined;

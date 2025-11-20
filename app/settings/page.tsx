@@ -7,6 +7,7 @@ import { YearSelect } from './components/YearSelect';
 import { FeedbackSelector } from './components/FeedbackSelector';
 import { TimerSelector } from './components/TimerSelector';
 import { SettingsLoadingSkeleton } from './components/SettingsSkeleton';
+import { useSettingsForm } from './hooks/useSettingsForm';
 
 export const optionsFeedbackAnswers = {
   immediate: {
@@ -40,11 +41,8 @@ type TimerOption = keyof typeof optionsTimer;
 
 export default function Settings() {
   const { data, isLoading, isError } = useExams();
-  const [yearOption, setYearOption] = useState<string | undefined>();
-
-  const [feedbackOption, setFeedbackOption] =
-    useState<FeedbackOption>('immediate');
-  const [timerOption, setTimerOption] = useState<TimerOption>('regressive');
+  const { actions, feedbackOption, timerOption, yearOption } =
+    useSettingsForm();
 
   if (isLoading) return <SettingsLoadingSkeleton />;
 
@@ -65,7 +63,7 @@ export default function Settings() {
         <YearSelect
           data={examYears}
           yearOption={yearOption}
-          setYearOption={setYearOption}
+          setYearOption={actions.setYearOption}
         />
         <hr className="my-5" />
         <h2 className="pb-4 text-[22px] leading-tight font-bold tracking-[-0.015em] text-gray-900 dark:text-white">
@@ -75,12 +73,12 @@ export default function Settings() {
           <FeedbackSelector
             feedbackOption={feedbackOption}
             options={Object.values(optionsFeedbackAnswers)}
-            onFeedbackOptionChange={(e) => setFeedbackOption(e)}
+            onFeedbackOptionChange={(e) => actions.setFeedbackOption(e)}
           />
           <TimerSelector
             options={Object.values(optionsTimer)}
             timerOption={timerOption}
-            onTimerOptionChange={(e) => setTimerOption(e)}
+            onTimerOptionChange={(e) => actions.setTimerOption(e)}
           />
         </div>
       </div>
@@ -89,6 +87,7 @@ export default function Settings() {
         yearOption={yearOption}
         feedbackDescription={optionsFeedbackAnswers[feedbackOption].description}
         timerDescription={optionsTimer[timerOption].description}
+        onConfirm={actions.onConfirm}
       />
     </div>
   );

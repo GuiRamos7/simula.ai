@@ -1,19 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { FaCircleInfo, FaRegCirclePlay } from 'react-icons/fa6';
-import { optionsFeedbackAnswers } from '../page';
-
-export type FeedbackOptionKey = keyof typeof optionsFeedbackAnswers;
 
 type SummaryCardProps = {
   yearOption: string | undefined;
   feedbackDescription: string;
   timerDescription: string;
+  onConfirm: () => void;
 };
 
 export const SummaryCard = ({
   yearOption,
   feedbackDescription,
   timerDescription,
+  onConfirm,
 }: SummaryCardProps) => {
   if (!yearOption) return null;
 
@@ -31,7 +30,7 @@ export const SummaryCard = ({
           </p>
         </div>
       </div>
-      <Button variant="pink">
+      <Button variant="pink" onClick={onConfirm}>
         <FaRegCirclePlay />
         <span className="truncate">Iniciar Simulado</span>
       </Button>

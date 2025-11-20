@@ -1,4 +1,8 @@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { optionsFeedbackAnswers } from '../page';
+
+export type FeedbackOptionKey = keyof typeof optionsFeedbackAnswers;
+
 
 type FeedbackOption = {
   value: string;
@@ -9,7 +13,7 @@ type FeedbackOption = {
 type FeedbackSelectorProps = {
   options: FeedbackOption[];
   feedbackOption: string;
-  onFeedbackOptionChange: (option: 'immediate' | 'end') => void;
+  onFeedbackOptionChange: (option: FeedbackOptionKey) => void;
 };
 
 export const FeedbackSelector = ({
@@ -26,7 +30,7 @@ export const FeedbackSelector = ({
       </legend>
       <RadioGroup
         value={feedbackOption}
-        onValueChange={(value: 'immediate' | 'end') => onFeedbackOptionChange(value)}
+        onValueChange={(value: FeedbackOptionKey) => onFeedbackOptionChange(value)}
       >
         {options.map((opt) => (
           <label
