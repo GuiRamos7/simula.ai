@@ -50,7 +50,7 @@ export default function Settings() {
   const examYears = (data && data.map((exam: Exam) => exam.year)) ?? [];
 
   return (
-    <div>
+    <div className=''>
       <div className="title mx-auto mt-8 w-5/6">
         <h1 className="pb-1 text-[22px] leading-tight font-bold tracking-[-0.015em] text-gray-900 dark:text-white">
           Configurar Simulado

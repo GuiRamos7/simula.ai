@@ -14,7 +14,7 @@ export function useSettingsForm() {
 
   const onConfirm = useCallback(() => {
     if (yearOption) {
-      router.push(`/exams/${yearOption}`);
+      router.push(`/exams/${yearOption}?question=1`);
     }
   }, [yearOption]);
 

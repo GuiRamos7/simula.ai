@@ -1,8 +1,10 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
+
+import { useQueries } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
+import { ExamSkeleton } from './components/ExamSkeleton';
+import { Questions } from './components/Questions';
 
 export type Alternative = {
   letter: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -26,97 +28,93 @@ export type Question = {
 
 export type QuestionProps = {
   question: Question;
-  onConfirmSelect: (selected: 'A' | 'B' | 'C' | 'D' | 'E') => void;
+  onConfirmSelect: (
+    questionIndex: number,
+    selected: 'A' | 'B' | 'C' | 'D' | 'E',
+  ) => void;
 };
 
-export const Question = ({ question, onConfirmSelect }: QuestionProps) => {
-  const [answerSelected, setAnswerSelected] = useState<
-    null | 'A' | 'B' | 'C' | 'D' | 'E'
-  >(null);
+const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
 
-
-  const renderFiles = useMemo(() => {
-    return question.files.map((questionFile) => (
-      <img className="mb-5 max-w-[400px] self-center" src={questionFile} />
-    ));
-  }, [question]);
-
-  const questionsAnswers = useMemo(() => {
-    return question.alternatives.map((q) => (
-      <Button
-        key={q.letter}
-        onClick={() => {
-          setAnswerSelected(q.letter);
-        }}
-        className={`cursor-pointer border-3 ${
-          q.letter === answerSelected ? 'border-indigo-500' : ''
-        }`}
-        size="custom-xl"
-        variant="outline"
-      >
-        {q.letter}) {q.text}
-      </Button>
-    ));
-  }, [question, answerSelected]);
-
-  return (
-    <div className="m-auto flex w-fit gap-5 p-5">
-      <div className="question-header max-w-2xl flex-1">
-        <h1 className="mb-10 text-base leading-relaxed font-bold whitespace-pre-line text-gray-800">
-          {question.title}
-        </h1>
-        <div className="context flex max-h-[80vh] flex-col items-center overflow-hidden overflow-y-auto text-base leading-relaxed whitespace-pre-line text-gray-800">
-          <div className="files w-fit">{renderFiles}</div>
-          <p className="block h-auto w-auto text-lg">
-            {question.alternativesIntroduction}
-          </p>
-        </div>
-      </div>
-
-      <div className="question-answer flex w-md flex-col gap-4 p-5">
-        {questionsAnswers}
-      </div>
-    </div>
-  );
-};
+const OFFSETS = [0, 50, 100, 150];
+const LIMIT = 50;
 
 export default function Home() {
   const [step, setStep] = useState(0);
   const { year } = useParams();
-  const { data, isLoading } = useQuery({
-    queryKey: ['questions'],
-    queryFn: () =>
-      fetch(`https://api.enem.dev/v1/exams/${year}/questions?limit=50`).then(
-        (res) => res.json(),
-      ),
+
+  const results = useQueries({
+    queries: OFFSETS.map((offset) => ({
+      queryKey: ['questions', year, offset],
+      queryFn: () =>
+        fetch(
+          `https://api.enem.dev/v1/exams/${year}/questions?limit=${LIMIT}&offset=${offset}`,
+        ).then((res) => res.json()),
+      staleTime: THREE_DAYS_IN_MS,
+      enabled: !!year,
+    })),
   });
 
-  console.log(data);
+  const isLoading = results.some((r) => r.isLoading);
 
+  const allQuestions = useMemo(() => {
+    return results
+      .flatMap((r) => r.data?.questions || [])
+      .sort((a: Question, b: Question) => a.index - b.index);
+  }, [results]);
 
   const onConfirmSelect = useCallback(
-    (resposta: string) => {
-      console.log(resposta);
-      setStep(step + 1);
-      const savedAnswers = localStorage.getItem('respostas')
-        ? JSON.parse(localStorage.getItem('respostas') as string)
-        : [];
+    (questionIndex: number, resposta: string) => {
+      const savedAnswers = JSON.parse(
+        localStorage.getItem('respostas') || '[]',
+      );
 
-      const answers = localStorage.getItem('respostas')
-        ? [...savedAnswers, resposta]
-        : [resposta];
-      localStorage.setItem('respostas', JSON.stringify([...answers]));
+      const existingIndex = savedAnswers.findIndex(
+        (ans: any) => ans.questionIndex === questionIndex,
+      );
+
+      const newAnswer = {
+        questionIndex: questionIndex,
+        selected: resposta,
+        timestamp: Date.now(),
+      };
+
+      if (existingIndex > -1) {
+        savedAnswers[existingIndex] = newAnswer;
+      } else {
+        savedAnswers.push(newAnswer);
+      }
+
+      localStorage.setItem('respostas', JSON.stringify(savedAnswers));
+
+      setStep((prevStep) => prevStep + 1);
     },
-    [step],
+    [],
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <ExamSkeleton />;
+
+  if (step >= allQuestions.length) {
+    return (
+      <p className="p-10 text-center text-2xl font-bold">
+        Parabéns! Você concluiu o simulado.
+      </p>
+    );
+  }
+
+  const currentQuestion = allQuestions[step];
+
+  if (!currentQuestion) {
+    return (
+      <p className="p-10 text-center">
+        Questão não encontrada. Iniciando a prova.
+      </p>
+    );
+  }
+
   return (
-    <div>
-      <Question
-        onConfirmSelect={onConfirmSelect}
-        question={data.questions[4]}
-      />
+    <div className="bg-background mx-auto mt-8 w-5/6">
+      <Questions onConfirmSelect={onConfirmSelect} question={currentQuestion} />
     </div>
   );
 }
