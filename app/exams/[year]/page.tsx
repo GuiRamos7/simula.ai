@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ExamSkeleton } from './components/ExamSkeleton';
 import { Questions } from './components/Questions';
+import { Footer } from './components/Footer';
 
 export type Alternative = {
   letter: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -46,9 +47,8 @@ const LIMIT = 50;
 
 export default function Home() {
   const [step, setStep] = useState(0);
-  const { year } = useParams();
-
   const [userResponses, setUserResponses] = useState<UserResponseProps[]>([]);
+  const { year } = useParams();
 
   useEffect(() => {
     const savedResponses = localStorage.getItem('answers');
@@ -68,8 +68,6 @@ export default function Home() {
       enabled: !!year,
     })),
   });
-
-  console.log(userResponses);
 
   const isLoading = results.some((r) => r.isLoading);
 
@@ -91,26 +89,26 @@ export default function Home() {
         questionIndex: questionIndex,
         selectedAlternative: answer,
       };
-
       if (existingIndex > -1) {
-        setUserResponses((prev) => [
-          ...prev.filter((ans) => ans.questionIndex !== questionIndex),
-          newAnswer,
-        ]);
         savedAnswers[existingIndex] = newAnswer;
       } else {
-        savedAnswers.push({
-          questionIndex: questionIndex,
-          selectedAlternative: answer,
-        });
+        savedAnswers.push(newAnswer);
       }
 
       localStorage.setItem('answers', JSON.stringify(savedAnswers));
-
+      setUserResponses(savedAnswers);
       setStep((prevStep) => prevStep + 1);
     },
     [],
   );
+
+  const onNext = useCallback(() => {
+    setStep((prevStep) => prevStep + 1);
+  }, []);
+
+  const onPrevious = useCallback(() => {
+    setStep((prevStep) => prevStep - 1);
+  }, []);
 
   if (isLoading) return <ExamSkeleton />;
 
@@ -135,9 +133,18 @@ export default function Home() {
   return (
     <div className="bg-background mx-auto mt-8 w-5/6">
       <Questions
-        key={currentQuestion.index ?? 0}
+        questionIndex={currentQuestion.index ?? 0}
         onConfirmSelect={onConfirmSelect}
         question={currentQuestion}
+      />
+      <Footer
+        onNext={onNext}
+        onPrevious={onPrevious}
+        currentQuestionIndex={currentQuestion.index}
+        totalQuestionsAnswered={userResponses.length}
+        totalQuestions={allQuestions.length}
+        isNextDisabled={step === allQuestions.length - 1}
+        isPreviousDisabled={step === 0}
       />
     </div>
   );

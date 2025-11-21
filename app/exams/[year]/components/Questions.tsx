@@ -30,7 +30,7 @@ export type Question = {
 
 export type QuestionProps = {
   question: Question;
-  key: number;
+  questionIndex: number;
   onConfirmSelect: (
     questionIndex: number,
     selected: 'A' | 'B' | 'C' | 'D' | 'E',
@@ -38,27 +38,37 @@ export type QuestionProps = {
 };
 
 export const Questions = memo(
-  ({ question, onConfirmSelect, key }: QuestionProps) => {
+  ({ question, onConfirmSelect, questionIndex }: QuestionProps) => {
     const [answerSelected, setAnswerSelected] = useState<
       null | 'A' | 'B' | 'C' | 'D' | 'E'
     >(() => null);
 
     useEffect(() => {
       setAnswerSelected(null);
-    }, [key]);
+    }, [questionIndex]);
 
     const questionsAnswers = useMemo(() => {
-      return question.alternatives.map((q) => (
-        <label
-          key={q.letter}
-          htmlFor={q.letter}
-          className="flex cursor-pointer items-center gap-3 rounded-xl border border-pink-500/40 p-4 transition-all data-[state=checked]:border-pink-500 data-[state=checked]:bg-pink-500/10"
-        >
-          <RadioGroupItem id={q.letter} value={q.letter} />
-          <span className="mr-2 font-bold">{q.letter})</span>
-          <span className="text-sm font-medium">{q.text}</span>
-        </label>
-      ));
+      return question.alternatives.map((q) => {
+        return (
+          <label
+            key={q.letter}
+            htmlFor={q.letter}
+            className="flex cursor-pointer items-center gap-3 rounded-xl border border-pink-500/40 p-4 transition-all data-[state=checked]:border-pink-500 data-[state=checked]:bg-pink-500/10"
+          >
+            <RadioGroupItem id={q.letter} value={q.letter} />
+            <span className="mr-2 font-bold">{q.letter})</span>
+            {q.text ? (
+              <span className="text-sm font-medium">{q.text}</span>
+            ) : (
+              <img
+                className="w-fit max-w-[280px]"
+                src={q.file ?? ''}
+                alt="Imagem das alternativas"
+              />
+            )}
+          </label>
+        );
+      });
     }, [question, answerSelected]);
 
     const handleConfirm = () => {
@@ -71,18 +81,18 @@ export const Questions = memo(
     return (
       <div className="m-auto flex w-full flex-col justify-center gap-5 p-5 lg:flex-row">
         <div className="question-header max-w-2xl flex-1">
-          <div className="context flex max-h-[80vh] flex-col items-center overflow-y-auto pr-2 text-base leading-relaxed whitespace-pre-line text-gray-800 dark:text-gray-300">
+          <div className="context flex flex-col items-center overflow-y-auto pr-2 text-base leading-relaxed whitespace-pre-line text-gray-800 lg:max-h-[80vh] dark:text-gray-300">
             <div className="block h-auto w-auto p-2 text-lg">
               <ReactMarkdown>{question.context}</ReactMarkdown>
             </div>
           </div>
         </div>
 
-        <div className="question-answer flex w-full flex-col gap-4 border-t border-l border-gray-200 p-5 md:min-w-[300px] lg:ml-5 lg:w-96 lg:min-w-[500px] lg:border-t-0 dark:border-gray-700">
+        <div className="question-answer flex w-full flex-col gap-4 border-t border-l-2 border-gray-200 p-5 md:min-w-[300px] lg:ml-5 lg:w-96 lg:min-w-[500px] lg:border-t-0 dark:border-l dark:border-gray-700">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Questão {question.index}
           </h2>
-          <p className="text-md mt-2 block h-auto w-auto border-b border-gray-700 pb-4">
+          <p className="text-md white:border-gray-200 mt-2 block h-auto w-auto border-b-2 pb-4 dark:border-b dark:border-gray-700">
             {question.alternativesIntroduction}
           </p>
           <RadioGroup
