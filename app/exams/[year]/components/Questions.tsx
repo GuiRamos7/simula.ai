@@ -30,6 +30,7 @@ export type Question = {
 
 export type QuestionProps = {
   question: Question;
+  key: number;
   onConfirmSelect: (
     questionIndex: number,
     selected: 'A' | 'B' | 'C' | 'D' | 'E',
@@ -37,10 +38,14 @@ export type QuestionProps = {
 };
 
 export const Questions = memo(
-  ({ question, onConfirmSelect }: QuestionProps) => {
+  ({ question, onConfirmSelect, key }: QuestionProps) => {
     const [answerSelected, setAnswerSelected] = useState<
       null | 'A' | 'B' | 'C' | 'D' | 'E'
-    >(null);
+    >(() => null);
+
+    useEffect(() => {
+      setAnswerSelected(null);
+    }, [key]);
 
     const questionsAnswers = useMemo(() => {
       return question.alternatives.map((q) => (

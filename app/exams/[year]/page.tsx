@@ -1,7 +1,7 @@
 'use client';
 
 import { useQueries } from '@tanstack/react-query';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ExamSkeleton } from './components/ExamSkeleton';
 import { Questions } from './components/Questions';
@@ -34,6 +34,11 @@ export type QuestionProps = {
   ) => void;
 };
 
+export type UserResponseProps = {
+  questionIndex: number;
+  selectedAlternative: string;
+};
+
 const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
 
 const OFFSETS = [0, 50, 100, 150];
@@ -42,6 +47,15 @@ const LIMIT = 50;
 export default function Home() {
   const [step, setStep] = useState(0);
   const { year } = useParams();
+
+  const [userResponses, setUserResponses] = useState<UserResponseProps[]>([]);
+
+  useEffect(() => {
+    const savedResponses = localStorage.getItem('answers');
+    if (savedResponses) {
+      setUserResponses(JSON.parse(savedResponses));
+    }
+  }, []);
 
   const results = useQueries({
     queries: OFFSETS.map((offset) => ({
@@ -55,6 +69,8 @@ export default function Home() {
     })),
   });
 
+  console.log(userResponses);
+
   const isLoading = results.some((r) => r.isLoading);
 
   const allQuestions = useMemo(() => {
@@ -64,10 +80,8 @@ export default function Home() {
   }, [results]);
 
   const onConfirmSelect = useCallback(
-    (questionIndex: number, resposta: string) => {
-      const savedAnswers = JSON.parse(
-        localStorage.getItem('respostas') || '[]',
-      );
+    (questionIndex: number, answer: string) => {
+      const savedAnswers = JSON.parse(localStorage.getItem('answers') || '[]');
 
       const existingIndex = savedAnswers.findIndex(
         (ans: any) => ans.questionIndex === questionIndex,
@@ -75,17 +89,23 @@ export default function Home() {
 
       const newAnswer = {
         questionIndex: questionIndex,
-        selected: resposta,
-        timestamp: Date.now(),
+        selectedAlternative: answer,
       };
 
       if (existingIndex > -1) {
+        setUserResponses((prev) => [
+          ...prev.filter((ans) => ans.questionIndex !== questionIndex),
+          newAnswer,
+        ]);
         savedAnswers[existingIndex] = newAnswer;
       } else {
-        savedAnswers.push(newAnswer);
+        savedAnswers.push({
+          questionIndex: questionIndex,
+          selectedAlternative: answer,
+        });
       }
 
-      localStorage.setItem('respostas', JSON.stringify(savedAnswers));
+      localStorage.setItem('answers', JSON.stringify(savedAnswers));
 
       setStep((prevStep) => prevStep + 1);
     },
@@ -114,7 +134,11 @@ export default function Home() {
 
   return (
     <div className="bg-background mx-auto mt-8 w-5/6">
-      <Questions onConfirmSelect={onConfirmSelect} question={currentQuestion} />
+      <Questions
+        key={currentQuestion.index ?? 0}
+        onConfirmSelect={onConfirmSelect}
+        question={currentQuestion}
+      />
     </div>
   );
 }
