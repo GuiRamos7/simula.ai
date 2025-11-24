@@ -2,7 +2,7 @@
 
 import { useQueries } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { ExamSkeleton } from './components/ExamSkeleton';
 import { Questions } from './components/Questions';
 import { Footer } from './components/Footer';
@@ -49,6 +49,7 @@ export default function Home() {
   const [step, setStep] = useState(0);
   const [userResponses, setUserResponses] = useState<UserResponseProps[]>([]);
   const { year } = useParams();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const savedResponses = localStorage.getItem('answers');
@@ -138,6 +139,7 @@ export default function Home() {
         question={currentQuestion}
       />
       <Footer
+        examId={searchParams.get('key') ?? ''}
         onNext={onNext}
         onPrevious={onPrevious}
         currentQuestionIndex={currentQuestion.index}
@@ -145,6 +147,10 @@ export default function Home() {
         totalQuestions={allQuestions.length}
         isNextDisabled={step === allQuestions.length - 1}
         isPreviousDisabled={step === 0}
+        timeMode={
+          (searchParams.get('timer') as 'progressive' | 'regressive') ??
+          'progressive'
+        }
       />
     </div>
   );

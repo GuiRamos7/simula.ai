@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { optionsFeedbackAnswers, optionsTimer } from '../page';
 import { useRouter } from 'next/navigation';
+import { nanoid } from 'nanoid';
 
 export type FeedbackOption = keyof typeof optionsFeedbackAnswers;
 export type TimerOption = keyof typeof optionsTimer;
@@ -14,7 +15,9 @@ export function useSettingsForm() {
 
   const onConfirm = useCallback(() => {
     if (yearOption) {
-      router.push(`/exams/${yearOption}?question=1`);
+      router.push(
+        `/exams/${yearOption}?key=${nanoid()}&mode=${feedbackOption}&timer=${timerOption}`,
+      );
     }
   }, [yearOption]);
 

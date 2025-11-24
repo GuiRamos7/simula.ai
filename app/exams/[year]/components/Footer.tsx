@@ -1,6 +1,8 @@
 'use client';
 
+import { Timer } from '@/app/components/Timer';
 import { Button } from '@/app/components/ui/button';
+import { time } from 'console';
 import { memo, useMemo } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
@@ -12,10 +14,13 @@ type FooterProps = {
   currentQuestionIndex: number;
   totalQuestions: number;
   totalQuestionsAnswered: number;
+  timeMode: 'progressive' | 'regressive';
+  examId: string;
 };
 
 export const Footer = memo(
   ({
+    examId,
     onNext,
     onPrevious,
     isNextDisabled,
@@ -23,25 +28,30 @@ export const Footer = memo(
     currentQuestionIndex,
     totalQuestions,
     totalQuestionsAnswered,
+    timeMode,
   }: FooterProps) => {
     const percentComplete = (
       (totalQuestionsAnswered / totalQuestions) *
       100
     ).toFixed(2);
 
+
     return (
       <footer className="bg-background fixed inset-x-0 bottom-0 z-10 flex items-center justify-between border-t-2 border-gray-200 p-4 md:h-20 lg:h-25 dark:border-t dark:border-gray-700">
-        <div className="m-auto flex w-5/6 justify-between">
-          <div className="flex items-center gap-4">
+        <div className="m-auto flex w-5/6 flex-col-reverse justify-between gap-2 md:flex-row">
+          <div className="flex w-full items-center gap-4">
             <div className="hidden flex-col gap-1.5 text-right lg:flex">
               <div className="flex items-center gap-4">
-                <p className="text-sm leading-normal font-medium text-white">
+                <p className="text-primary text-sm leading-normal font-medium">
                   Questões respondidas: {totalQuestionsAnswered}/
                   {totalQuestions}
                 </p>
-                <p className="text-sm leading-normal font-normal text-[#9da6b9]">
-                  02:45:30 restantes
-                </p>
+                <Timer
+                  mode={timeMode}
+                  initialTime={11 * 60 * 60} // 11h
+                  storageKey={`exam-${examId}-${timeMode}`}
+                  onFinish={() => alert('Seu tempo acabou!')}
+                />
               </div>
               <div className="rounded-full bg-[#ddc3d8] dark:bg-[#3b4354]">
                 <div
@@ -50,17 +60,17 @@ export const Footer = memo(
                 />
               </div>
             </div>
-            <Button variant="pink">
-              <span className="truncate">Finalizar Simulado</span>
+            <Button variant="pink" size="lg" className="w-full md:w-fit">
+              Finalizar Simulado
             </Button>
           </div>
-          <div className="pagination flex gap-3 align-middle">
+          <div className="pagination flex w-full justify-between gap-3 align-middle md:justify-end">
             <Button
               onClick={onPrevious}
               disabled={isPreviousDisabled}
               size="lg"
               variant="secondary"
-              className="cursor-pointer"
+              className="w-[45%] cursor-pointer md:w-fit"
             >
               <FaChevronLeft className="mr-2 h-4 w-4" />
               Anterior
@@ -70,7 +80,7 @@ export const Footer = memo(
               disabled={isNextDisabled}
               variant="pink"
               size="lg"
-              className="cursor-pointer"
+              className="w-[45%] cursor-pointer md:w-fit"
             >
               Próxima
               <FaChevronRight className="ml-2 h-4 w-4" />
