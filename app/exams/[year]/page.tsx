@@ -38,8 +38,8 @@ export type QuestionProps = {
 
 export type UserResponseProps = {
   questionIndex: number;
-  selectedAlternative: string;
-  correctAlternative: string;
+  selectedAlternative: 'A' | 'B' | 'C' | 'D' | 'E';
+  correctAlternative: 'A' | 'B' | 'C' | 'D' | 'E';
 };
 
 const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
@@ -96,7 +96,8 @@ export default function Home() {
       const newAnswer = {
         questionIndex: questionIndex,
         selectedAlternative: answer,
-        correctAlternative: allQuestions[questionIndex - 1]?.correctAlternative ?? 'A',
+        correctAlternative:
+          allQuestions[questionIndex - 1]?.correctAlternative ?? 'A',
       };
       if (existingIndex > -1) {
         savedAnswers[existingIndex] = newAnswer;

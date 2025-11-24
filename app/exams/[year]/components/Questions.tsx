@@ -4,6 +4,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { Button } from '@/app/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import ReactMarkdown from 'react-markdown';
+import { useSearchParams } from 'next/navigation';
 
 export type Alternative = {
   letter: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -47,16 +48,31 @@ export const Questions = memo(
     const [answerSelected, setAnswerSelected] = useState<
       null | 'A' | 'B' | 'C' | 'D' | 'E'
     >(null);
-    const [showAnswer, setShowAnswer] = useState<boolean>(false);
+
+    const [showAnswer, setShowAnswer] = useState(false);
+    const searchParams = useSearchParams();
+
     useEffect(() => {
-      setAnswerSelected(null);
-      setShowAnswer(false);
+      const storageKey = `answers-${question.year}-${searchParams.get('key')}`;
+      const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      const existing = saved.find(
+        (e: any) => e.questionIndex === questionIndex,
+      );
+
+      if (existing) {
+        setAnswerSelected(existing.selectedAlternative);
+        setShowAnswer(true);
+      } else {
+        setAnswerSelected(null);
+        setShowAnswer(false);
+      }
     }, [questionIndex]);
 
     const questionsAnswers = useMemo(() => {
-      return question.alternatives.map((q) => {
-        const isCorrect = q.letter === question.correctAlternative;
-        const isSelected = answerSelected === q.letter;
+      return question.alternatives.map((alt) => {
+        const isCorrect = alt.letter === question.correctAlternative;
+        const isSelected = answerSelected === alt.letter;
 
         let borderClass = 'border-pink-500/40';
 
@@ -66,22 +82,23 @@ export const Questions = memo(
             borderClass = 'border-red-500 bg-red-500/10';
           else borderClass = 'opacity-50';
         }
+
         return (
           <label
-            key={q.letter}
-            htmlFor={q.letter}
+            key={alt.letter}
+            htmlFor={alt.letter}
             className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${borderClass}`}
           >
-            <RadioGroupItem id={q.letter} value={q.letter} />
-            <span className="mr-2 font-bold">{q.letter})</span>
+            <RadioGroupItem id={alt.letter} value={alt.letter} />
+            <span className="mr-2 font-bold">{alt.letter})</span>
 
-            {q.text ? (
-              <span className="text-sm font-medium">{q.text}</span>
+            {alt.text ? (
+              <span className="text-sm font-medium">{alt.text}</span>
             ) : (
               <img
                 className="w-fit max-w-[280px]"
-                src={q.file ?? ''}
-                alt="Imagem das alternativas"
+                src={alt.file ?? ''}
+                alt="Imagem alternativa"
               />
             )}
           </label>
@@ -94,12 +111,10 @@ export const Questions = memo(
         onConfirmSelect(question.index, answerSelected);
         setAnswerSelected(null);
       }
-
       if (answerSelected && showAnswer) {
         onConfirmSelect(question.index, answerSelected);
         setAnswerSelected(null);
       }
-
       if (mode === 'immediate') {
         setShowAnswer(true);
       }
@@ -107,6 +122,7 @@ export const Questions = memo(
 
     return (
       <div className="m-auto mb-30 flex w-full flex-col justify-center gap-5 p-5 lg:mb-0 lg:flex-row">
+        {/* CONTEXTO */}
         <div className="question-header max-w-2xl flex-1">
           <div className="context flex flex-col items-center overflow-y-auto pr-2 text-base leading-relaxed whitespace-pre-line text-gray-800 lg:max-h-[80vh] dark:text-gray-300">
             <div className="block h-auto w-auto p-2 text-lg">
@@ -119,6 +135,7 @@ export const Questions = memo(
           </div>
         </div>
 
+        {/* ALTERNATIVAS */}
         <div className="question-answer flex w-full flex-col gap-4 border-0 p-5 md:min-w-[300px] md:border-l-2 md:border-gray-200 lg:ml-5 lg:w-96 lg:min-w-[500px] dark:md:border-gray-700">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Questão {question.index}
@@ -133,10 +150,9 @@ export const Questions = memo(
           </p>
 
           <RadioGroup
+            disabled={showAnswer}
             value={answerSelected || ''}
-            onValueChange={(value: 'A' | 'B' | 'C' | 'D' | 'E') =>
-              setAnswerSelected(value)
-            }
+            onValueChange={(v) => setAnswerSelected(v as any)}
           >
             {questionsAnswers}
           </RadioGroup>
@@ -147,7 +163,7 @@ export const Questions = memo(
             variant="pink"
             className="min-h-14"
           >
-            {showAnswer ? 'Proxima pergunta' : 'Confirmar resposta'}
+            {showAnswer ? 'Próxima pergunta' : 'Confirmar resposta'}
           </Button>
         </div>
       </div>
