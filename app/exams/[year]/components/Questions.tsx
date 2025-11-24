@@ -49,6 +49,8 @@ export const Questions = memo(
       null | 'A' | 'B' | 'C' | 'D' | 'E'
     >(null);
 
+    console.log(answerSelected);
+
     const [showAnswer, setShowAnswer] = useState(false);
     const searchParams = useSearchParams();
 

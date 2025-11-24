@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/app/components/ui/button';
-import React from 'react';
+import { nanoid } from 'nanoid';
 
 type QuestionStatus = {
   questionIndex: number;
@@ -46,14 +46,14 @@ export function QuestionsNavigator({
     return 'red';
   };
 
-  const renderRow = (items: (number | string)[]) => (
+  const renderRow = (items: number[]) => (
     <div className="mb-4 grid grid-cols-5 gap-3">
       {items?.map((num: number) => {
         const isActive = step === num - 1;
 
         return (
           <Button
-            key={`num-${num}`}
+            key={`num-${nanoid()}`}
             variant={getStatusClass(num)}
             onClick={() => onSelect(num - 1)}
             className={`flex h-10 items-center justify-center rounded-lg border text-sm font-semibold transition ${
