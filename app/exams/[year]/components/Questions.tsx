@@ -111,7 +111,9 @@ export const Questions = memo(
           <div className="context flex flex-col items-center overflow-y-auto pr-2 text-base leading-relaxed whitespace-pre-line text-gray-800 lg:max-h-[80vh] dark:text-gray-300">
             <div className="block h-auto w-auto p-2 text-lg">
               <ReactMarkdown>
-                {question.context ?? question.alternativesIntroduction}
+                {!!question.context
+                  ? question.context
+                  : question.alternativesIntroduction}
               </ReactMarkdown>
             </div>
           </div>
@@ -127,7 +129,7 @@ export const Questions = memo(
           </span>
 
           <p className="text-md block h-auto w-auto border-b-2 border-gray-200 pb-4 md:mt-2 dark:border-gray-700">
-            {question.context ? question.alternativesIntroduction : ''}
+            {!!question.context ? question.alternativesIntroduction : ''}
           </p>
 
           <RadioGroup

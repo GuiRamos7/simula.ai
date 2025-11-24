@@ -20,6 +20,13 @@ const buttonVariants = cva(
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
         pink: 'cursor-pointer bg-pink-500 text-white hover:bg-pink-500/90 focus-visible:ring-pink-500',
+        red: 'cursor-pointer bg bg-red-500/30 text-red-400 hover:bg-red-500/50',
+        green:
+          'cursor-pointer bg-green-500/30 text-green-400 hover:bg-green-500/50',
+        yellow:
+          'cursor-pointer bg-yellow-500/30 text-yellow-400 hover:bg-yellow-500/50',
+        'pink-answer':
+          'cursor-pointer bg-pink-500/30 text-white hover:bg-pink-500/50',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',

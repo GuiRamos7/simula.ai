@@ -5,7 +5,7 @@ export const Header = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="bg-background w-container fixed top-0 right-0 left-0 w-full border-b-2 border-gray-200 p-1 dark:border-b dark:border-gray-700">
+    <header className=" z-20 bg-background w-container fixed top-0 right-0 left-0 w-full border-b-2 border-gray-200 p-1 dark:border-b dark:border-gray-700">
       <div className="m-auto flex w-5/6 items-center justify-between">
         <h1 className="bold text-3xl">
           Simula

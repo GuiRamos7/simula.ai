@@ -6,6 +6,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { ExamSkeleton } from './components/ExamSkeleton';
 import { Questions } from './components/Questions';
 import { Footer } from './components/Footer';
+import { QuestionsNavigator } from './components/QuestionsNavigator';
 
 export type Alternative = {
   letter: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -38,6 +39,7 @@ export type QuestionProps = {
 export type UserResponseProps = {
   questionIndex: number;
   selectedAlternative: string;
+  correctAlternative: string;
 };
 
 const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
@@ -52,7 +54,9 @@ export default function Home() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const savedResponses = localStorage.getItem('answers');
+    const savedResponses = localStorage.getItem(
+      `answers-${year}-${searchParams.get('key')}`,
+    );
     if (savedResponses) {
       setUserResponses(JSON.parse(savedResponses));
     }
@@ -80,7 +84,10 @@ export default function Home() {
 
   const onConfirmSelect = useCallback(
     (questionIndex: number, answer: string) => {
-      const savedAnswers = JSON.parse(localStorage.getItem('answers') || '[]');
+      const savedAnswers = JSON.parse(
+        localStorage.getItem(`answers-${year}-${searchParams.get('key')}`) ||
+          '[]',
+      );
 
       const existingIndex = savedAnswers.findIndex(
         (ans: any) => ans.questionIndex === questionIndex,
@@ -89,6 +96,7 @@ export default function Home() {
       const newAnswer = {
         questionIndex: questionIndex,
         selectedAlternative: answer,
+        correctAlternative: allQuestions[questionIndex - 1]?.correctAlternative ?? 'A',
       };
       if (existingIndex > -1) {
         savedAnswers[existingIndex] = newAnswer;
@@ -96,7 +104,10 @@ export default function Home() {
         savedAnswers.push(newAnswer);
       }
 
-      localStorage.setItem('answers', JSON.stringify(savedAnswers));
+      localStorage.setItem(
+        `answers-${year}-${searchParams.get('key')}`,
+        JSON.stringify(savedAnswers),
+      );
       setUserResponses(savedAnswers);
       setStep((prevStep) => prevStep + 1);
     },
@@ -137,6 +148,15 @@ export default function Home() {
         questionIndex={currentQuestion.index ?? 0}
         onConfirmSelect={onConfirmSelect}
         question={currentQuestion}
+        mode={searchParams.get('mode') as 'immediate' | 'end'}
+      />
+      <QuestionsNavigator
+        step={step}
+        totalQuestions={allQuestions.length}
+        userAnswers={userResponses}
+        onSelect={(e) => {
+          console.log(e);
+        }}
         mode={searchParams.get('mode') as 'immediate' | 'end'}
       />
       <Footer
