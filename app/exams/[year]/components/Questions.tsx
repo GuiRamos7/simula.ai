@@ -39,45 +39,69 @@ export type QuestionProps = {
     questionIndex: number,
     selected: 'A' | 'B' | 'C' | 'D' | 'E',
   ) => void;
+  mode: 'immediate' | 'end';
 };
 
 export const Questions = memo(
-  ({ question, onConfirmSelect, questionIndex }: QuestionProps) => {
+  ({ question, onConfirmSelect, questionIndex, mode }: QuestionProps) => {
     const [answerSelected, setAnswerSelected] = useState<
       null | 'A' | 'B' | 'C' | 'D' | 'E'
     >(null);
-
+    const [showAnswer, setShowAnswer] = useState<boolean>(false);
     useEffect(() => {
       setAnswerSelected(null);
+      setShowAnswer(false);
     }, [questionIndex]);
 
     const questionsAnswers = useMemo(() => {
-      return question.alternatives.map((q) => (
-        <label
-          key={q.letter}
-          htmlFor={q.letter}
-          className="flex cursor-pointer items-center gap-3 rounded-xl border border-pink-500/40 p-4 transition-all data-[state=checked]:border-pink-500 data-[state=checked]:bg-pink-500/10"
-        >
-          <RadioGroupItem id={q.letter} value={q.letter} />
-          <span className="mr-2 font-bold">{q.letter})</span>
+      return question.alternatives.map((q) => {
+        const isCorrect = q.letter === question.correctAlternative;
+        const isSelected = answerSelected === q.letter;
 
-          {q.text ? (
-            <span className="text-sm font-medium">{q.text}</span>
-          ) : (
-            <img
-              className="w-fit max-w-[280px]"
-              src={q.file ?? ''}
-              alt="Imagem das alternativas"
-            />
-          )}
-        </label>
-      ));
-    }, [question]);
+        let borderClass = 'border-pink-500/40';
+
+        if (showAnswer) {
+          if (isCorrect) borderClass = 'border-green-500 bg-green-500/10';
+          else if (isSelected && !isCorrect)
+            borderClass = 'border-red-500 bg-red-500/10';
+          else borderClass = 'opacity-50';
+        }
+        return (
+          <label
+            key={q.letter}
+            htmlFor={q.letter}
+            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${borderClass}`}
+          >
+            <RadioGroupItem id={q.letter} value={q.letter} />
+            <span className="mr-2 font-bold">{q.letter})</span>
+
+            {q.text ? (
+              <span className="text-sm font-medium">{q.text}</span>
+            ) : (
+              <img
+                className="w-fit max-w-[280px]"
+                src={q.file ?? ''}
+                alt="Imagem das alternativas"
+              />
+            )}
+          </label>
+        );
+      });
+    }, [question, showAnswer, answerSelected]);
 
     const handleConfirm = () => {
-      if (answerSelected) {
+      if (answerSelected && mode === 'end') {
         onConfirmSelect(question.index, answerSelected);
         setAnswerSelected(null);
+      }
+
+      if (answerSelected && showAnswer) {
+        onConfirmSelect(question.index, answerSelected);
+        setAnswerSelected(null);
+      }
+
+      if (mode === 'immediate') {
+        setShowAnswer(true);
       }
     };
 
@@ -121,7 +145,7 @@ export const Questions = memo(
             variant="pink"
             className="min-h-14"
           >
-            Confirmar e Próxima Questão
+            {showAnswer ? 'Proxima pergunta' : 'Confirmar resposta'}
           </Button>
         </div>
       </div>

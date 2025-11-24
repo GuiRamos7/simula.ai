@@ -137,6 +137,7 @@ export default function Home() {
         questionIndex={currentQuestion.index ?? 0}
         onConfirmSelect={onConfirmSelect}
         question={currentQuestion}
+        mode={searchParams.get('mode') as 'immediate' | 'end'}
       />
       <Footer
         examId={searchParams.get('key') ?? ''}
