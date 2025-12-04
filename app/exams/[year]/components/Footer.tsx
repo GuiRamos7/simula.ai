@@ -4,7 +4,7 @@ import { Timer } from '@/app/components/Timer';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { time } from 'console';
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 type FooterProps = {
@@ -17,6 +17,7 @@ type FooterProps = {
   totalQuestionsAnswered: number;
   timeMode: 'progressive' | 'regressive';
   examId: string;
+  onSelectPage: (page: number) => void;
 };
 
 export const Footer = memo(
@@ -30,11 +31,18 @@ export const Footer = memo(
     totalQuestions,
     totalQuestionsAnswered,
     timeMode,
+    onSelectPage,
   }: FooterProps) => {
     const percentComplete = (
       (totalQuestionsAnswered / totalQuestions) *
       100
     ).toFixed(2);
+
+    const [pageSelected, setPageSelected] = useState(0);
+
+    useEffect(() => {
+      setPageSelected(currentQuestionIndex );
+    }, [currentQuestionIndex]);
 
     return (
       <footer className="bg-background fixed inset-x-0 bottom-0 z-10 flex items-center justify-between border-t-2 border-gray-200 p-4 md:h-20 lg:h-25 dark:border-t dark:border-gray-700">
@@ -76,10 +84,13 @@ export const Footer = memo(
               Anterior
             </Button>
             <Input
+              className="h-10 max-w-fit min-w-[33px] text-center"
               type="number"
               min={1}
               max={totalQuestions}
-              value={currentQuestionIndex}
+              value={pageSelected}
+              onChange={(e) => setPageSelected(Number(e.target.value))}
+              onBlur={(e) => onSelectPage(Number(e.target.value))}
             />
             <Button
               onClick={onNext}

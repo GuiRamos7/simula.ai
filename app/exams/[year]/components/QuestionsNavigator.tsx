@@ -26,13 +26,19 @@ export function QuestionsNavigator({
 }: QuestionsNavigatorProps) {
   const renderRows = () => {
     const initialRows = Array.from({ length: 5 }, (_, i) => i + 1);
-    const middleRow = Array.from({ length: 5 }, (_, i) =>
-      step <= 5 ? 6 + i : step + i,
-    );
+    const middleRow = Array.from({ length: 5 }, (_, i) => {
+      if (step >= totalQuestions - 5) {
+        return totalQuestions - 10 + i;
+      }
+      if (step <= 5) {
+        return 6 + i;
+      }
+      return step + i;
+    });
     const lastBlock = Array.from(
-      { length: Math.min(5, totalQuestions) },
-      (_, i) => totalQuestions + i,
-    );
+      { length: 5 },
+      (_, i) => totalQuestions - i,
+    ).reverse();
 
     return [...initialRows, ...middleRow, ...lastBlock];
   };
@@ -55,7 +61,7 @@ export function QuestionsNavigator({
           <Button
             key={`num-${nanoid()}`}
             variant={getStatusClass(num)}
-            onClick={() => onSelect(num - 1)}
+            onClick={() => onSelect(num)}
             className={`flex h-10 items-center justify-center rounded-lg border text-sm font-semibold transition ${
               isActive ? 'border-pink-500 ring-2 ring-pink-500' : ''
             }`}

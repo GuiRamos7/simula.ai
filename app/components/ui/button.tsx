@@ -62,7 +62,7 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={`${buttonVariants({ variant, size })} ${className}`}
+      className={`pointer ${buttonVariants({ variant, size })} ${className}`}
       {...props}
     />
   );

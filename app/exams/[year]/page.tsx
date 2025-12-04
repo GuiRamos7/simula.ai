@@ -50,18 +50,33 @@ const LIMIT = 50;
 export default function Home() {
   const [step, setStep] = useState(0);
   const [userResponses, setUserResponses] = useState<UserResponseProps[]>([]);
+
   const { year } = useParams();
   const searchParams = useSearchParams();
   const examMode = searchParams.get('mode') as 'immediate' | 'end';
+  const key = searchParams.get('key');
 
+  const STORAGE_ANSWERS = `answers-${year}-${key}`;
+  const STORAGE_STEP = `step-${year}-${key}`;
+
+  // Restore responses
   useEffect(() => {
-    const savedResponses = localStorage.getItem(
-      `answers-${year}-${searchParams.get('key')}`,
-    );
+    const savedResponses = localStorage.getItem(STORAGE_ANSWERS);
     if (savedResponses) {
       setUserResponses(JSON.parse(savedResponses));
     }
   }, []);
+
+  useEffect(() => {
+    const savedStep = localStorage.getItem(STORAGE_STEP);
+    if (savedStep) {
+      setStep(Number(savedStep));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_STEP, String(step));
+  }, [step]);
 
   const results = useQueries({
     queries: OFFSETS.map((offset) => ({
@@ -78,16 +93,23 @@ export default function Home() {
   const isLoading = results.some((r) => r.isLoading);
 
   const allQuestions = useMemo(() => {
-    return results
-      .flatMap((r) => r.data?.questions || [])
-      .sort((a: Question, b: Question) => a.index - b.index);
+    return Array.from(
+      new Map(
+        results
+          .flatMap((r) => r.data?.questions || [])
+          .map((q) => [q.index, q]),
+      ).values(),
+    ).sort((a, b) => a.index - b.index);
   }, [results]);
+
+  const currentQuestion = useMemo(() => {
+    return allQuestions[step];
+  }, [step, allQuestions]);
 
   const onConfirmSelect = useCallback(
     (questionIndex: number, answer: string) => {
       const savedAnswers = JSON.parse(
-        localStorage.getItem(`answers-${year}-${searchParams.get('key')}`) ||
-          '[]',
+        localStorage.getItem(STORAGE_ANSWERS) || '[]',
       );
 
       const existingIndex = savedAnswers.findIndex(
@@ -100,41 +122,34 @@ export default function Home() {
         correctAlternative:
           allQuestions[questionIndex - 1]?.correctAlternative ?? 'A',
       };
+
       if (existingIndex > -1) {
         savedAnswers[existingIndex] = newAnswer;
       } else {
         savedAnswers.push(newAnswer);
       }
 
-      localStorage.setItem(
-        `answers-${year}-${searchParams.get('key')}`,
-        JSON.stringify(savedAnswers),
-      );
+      localStorage.setItem(STORAGE_ANSWERS, JSON.stringify(savedAnswers));
       setUserResponses(savedAnswers);
-      setStep((prevStep) => prevStep + 1);
+
+      setStep((prev) => prev + 1);
     },
-    [],
+    [allQuestions],
   );
 
   const onNext = useCallback(() => {
-    setStep((prevStep) => prevStep + 1);
+    setStep((prev) => prev + 1);
   }, []);
 
   const onPrevious = useCallback(() => {
-    setStep((prevStep) => prevStep - 1);
+    setStep((prev) => prev - 1);
+  }, []);
+
+  const onSelectPage = useCallback((page: number) => {
+    setStep(page - 1);
   }, []);
 
   if (isLoading) return <ExamSkeleton />;
-
-  if (step >= allQuestions.length) {
-    return (
-      <p className="p-10 text-center text-2xl font-bold">
-        Parabéns! Você concluiu o simulado.
-      </p>
-    );
-  }
-
-  const currentQuestion = allQuestions[step];
 
   if (!currentQuestion) {
     return (
@@ -156,18 +171,19 @@ export default function Home() {
           question={currentQuestion}
           mode={examMode}
         />
+
         <QuestionsNavigator
           step={step}
           totalQuestions={allQuestions.length}
           userAnswers={userResponses}
-          onSelect={(e) => {
-            console.log(e);
-          }}
+          onSelect={onSelectPage}
           mode={examMode}
         />
       </div>
+
       <Footer
-        examId={searchParams.get('key') ?? ''}
+        onSelectPage={onSelectPage}
+        examId={key ?? ''}
         onNext={onNext}
         onPrevious={onPrevious}
         currentQuestionIndex={currentQuestion.index}
