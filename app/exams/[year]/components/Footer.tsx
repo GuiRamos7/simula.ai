@@ -41,7 +41,7 @@ export const Footer = memo(
     const [pageSelected, setPageSelected] = useState(0);
 
     useEffect(() => {
-      setPageSelected(currentQuestionIndex );
+      setPageSelected(currentQuestionIndex);
     }, [currentQuestionIndex]);
 
     return (
@@ -91,6 +91,11 @@ export const Footer = memo(
               value={pageSelected}
               onChange={(e) => setPageSelected(Number(e.target.value))}
               onBlur={(e) => onSelectPage(Number(e.target.value))}
+              onKeyUp={(e) => {
+                if (e.code === 'Enter') {
+                  onSelectPage(Number(pageSelected));
+                }
+              }}
             />
             <Button
               onClick={onNext}
