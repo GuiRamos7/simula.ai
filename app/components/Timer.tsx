@@ -24,13 +24,10 @@ export function Timer({
     const h = Math.floor(sec / 3600)
       .toString()
       .padStart(2, '0');
-
     const m = Math.floor((sec % 3600) / 60)
       .toString()
       .padStart(2, '0');
-
     const s = (sec % 60).toString().padStart(2, '0');
-
     return `${h}:${m}:${s}`;
   };
 
@@ -39,11 +36,28 @@ export function Timer({
 
     if (saved) {
       const parsed = JSON.parse(saved);
+      const { time: savedTime, lastUpdate } = parsed;
 
-      setTime(parsed.time);
+      const now = Date.now();
+      const diffSec = Math.floor((now - lastUpdate) / 1000);
+
+      let next = savedTime;
+
+      if (mode === 'progressive') {
+        next = savedTime + diffSec;
+      } else {
+        next = savedTime - diffSec;
+        if (next <= 0) {
+          next = 0;
+          onFinish?.();
+        }
+      }
+
+      setTime(next);
       return;
     }
 
+    // first use
     if (mode === 'regressive') {
       setTime(initialTime);
     }
@@ -65,7 +79,10 @@ export function Timer({
           }
         }
 
-        localStorage.setItem(storageKey, JSON.stringify({ time: next }));
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify({ time: next, lastUpdate: Date.now() }),
+        );
 
         return next;
       });

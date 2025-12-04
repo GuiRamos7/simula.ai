@@ -68,7 +68,7 @@ export function QuestionsNavigator({
   );
 
   return (
-    <aside className="bg-background fixed top-0 right-0 z-10 hidden h-screen w-[320px] overflow-y-auto border-l-2 border-gray-200 p-6 pt-20 md:block dark:border-gray-700">
+    <aside className="bg-background fixed top-0 right-0 z-10 hidden h-screen w-[320px] overflow-y-auto border-l-2 border-gray-200 p-6 pt-20 lg:block dark:border-gray-700">
       <h2 className="text-primary mb-4 text-lg font-bold">Questões</h2>
       {renderRow(renderRows())}
     </aside>

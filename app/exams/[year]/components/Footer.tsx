@@ -2,6 +2,7 @@
 
 import { Timer } from '@/app/components/Timer';
 import { Button } from '@/app/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { time } from 'console';
 import { memo, useMemo } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -34,7 +35,6 @@ export const Footer = memo(
       (totalQuestionsAnswered / totalQuestions) *
       100
     ).toFixed(2);
-
 
     return (
       <footer className="bg-background fixed inset-x-0 bottom-0 z-10 flex items-center justify-between border-t-2 border-gray-200 p-4 md:h-20 lg:h-25 dark:border-t dark:border-gray-700">
@@ -75,6 +75,12 @@ export const Footer = memo(
               <FaChevronLeft className="mr-2 h-4 w-4" />
               Anterior
             </Button>
+            <Input
+              type="number"
+              min={1}
+              max={totalQuestions}
+              value={currentQuestionIndex}
+            />
             <Button
               onClick={onNext}
               disabled={isNextDisabled}

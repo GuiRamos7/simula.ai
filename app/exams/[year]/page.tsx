@@ -144,22 +144,27 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-background mx-auto mt-8 w-5/6">
-      <Questions
-        questionIndex={currentQuestion.index ?? 0}
-        onConfirmSelect={onConfirmSelect}
-        question={currentQuestion}
-        mode={searchParams.get('mode') as 'immediate' | 'end'}
-      />
-      <QuestionsNavigator
-        step={step}
-        totalQuestions={allQuestions.length}
-        userAnswers={userResponses}
-        onSelect={(e) => {
-          console.log(e);
-        }}
-        mode={searchParams.get('mode') as 'immediate' | 'end'}
-      />
+    <>
+      <div
+        className="bg-background relative mb-30 -left-40 mx-auto mt-8"
+        style={{ width: `calc(83.33% - 320px)` }}
+      >
+        <Questions
+          questionIndex={currentQuestion.index ?? 0}
+          onConfirmSelect={onConfirmSelect}
+          question={currentQuestion}
+          mode={searchParams.get('mode') as 'immediate' | 'end'}
+        />
+        <QuestionsNavigator
+          step={step}
+          totalQuestions={allQuestions.length}
+          userAnswers={userResponses}
+          onSelect={(e) => {
+            console.log(e);
+          }}
+          mode={searchParams.get('mode') as 'immediate' | 'end'}
+        />
+      </div>
       <Footer
         examId={searchParams.get('key') ?? ''}
         onNext={onNext}
@@ -174,6 +179,6 @@ export default function Home() {
           'progressive'
         }
       />
-    </div>
+    </>
   );
 }
