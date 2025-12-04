@@ -1,6 +1,6 @@
 import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { Question } from '../page';
+import { QuestionType } from '@/app/types';
 
 const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
 
@@ -18,7 +18,7 @@ export type QuestionsAPIResponse = {
     offset: number;
     total: number;
   };
-  questions: Question[];
+  questions: QuestionType[];
 };
 
 export const useExam = ({ year }: useExamProps) => {

@@ -1,6 +1,4 @@
 'use client';
-
-import { useQueries } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ExamSkeleton } from './components/ExamSkeleton';
@@ -8,41 +6,7 @@ import { Questions } from './components/Questions';
 import { Footer } from './components/Footer';
 import { QuestionsNavigator } from './components/QuestionsNavigator';
 import { useExam } from './hooks/useExam';
-
-export type Alternative = {
-  letter: 'A' | 'B' | 'C' | 'D' | 'E';
-  text: string;
-  file: string | null;
-  isCorrect: boolean;
-};
-
-export enum QuestionDisipline {
-  'linguagens' = 'Linguagens e Código',
-  'ciencias-humanas' = 'Ciências Humanas',
-  'matematica' = 'Matemática',
-  'ciencias-natureza' = 'Ciências da Natureza',
-}
-
-export type Question = {
-  title: string;
-  index: number;
-  discipline: keyof typeof QuestionDisipline;
-  language: string;
-  year: number;
-  context: string;
-  files: string[];
-  correctAlternative: 'A' | 'B' | 'C' | 'D' | 'E';
-  alternativesIntroduction: string;
-  alternatives: Alternative[];
-};
-
-export type QuestionProps = {
-  question: Question;
-  onConfirmSelect: (
-    questionIndex: number,
-    selected: 'A' | 'B' | 'C' | 'D' | 'E',
-  ) => void;
-};
+import { ExamMode } from '@/app/types';
 
 export type UserResponseProps = {
   questionIndex: number;
@@ -50,24 +14,18 @@ export type UserResponseProps = {
   correctAlternative: 'A' | 'B' | 'C' | 'D' | 'E';
 };
 
-const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
-
-const OFFSETS = [0, 50, 100, 150];
-const LIMIT = 50;
-
 export default function Home() {
   const [step, setStep] = useState(0);
   const [userResponses, setUserResponses] = useState<UserResponseProps[]>([]);
   const { year } = useParams();
-  const { allQuestions, isLoading } = useExam({ year: `${year}` });
+  const { allQuestions, isLoading, error } = useExam({ year: `${year}` });
   const searchParams = useSearchParams();
-  const examMode = searchParams.get('mode') as 'immediate' | 'end';
+  const examMode = searchParams.get('mode') as ExamMode;
   const key = searchParams.get('key');
 
   const STORAGE_ANSWERS = `answers-${year}-${key}`;
   const STORAGE_STEP = `step-${year}-${key}`;
 
-  // Restore responses
   useEffect(() => {
     const savedResponses = localStorage.getItem(STORAGE_ANSWERS);
     if (savedResponses) {
@@ -135,7 +93,7 @@ export default function Home() {
 
   if (isLoading) return <ExamSkeleton />;
 
-  if (!currentQuestion) {
+  if (!currentQuestion || error) {
     return (
       <p className="p-10 text-center">
         Questão não encontrada. Iniciando a prova.

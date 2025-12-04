@@ -3,7 +3,6 @@
 import { Timer } from '@/app/components/Timer';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { time } from 'console';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 

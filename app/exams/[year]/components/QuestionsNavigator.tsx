@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/app/components/ui/button';
+import { ExamMode } from '@/app/types';
 import { nanoid } from 'nanoid';
 
 type QuestionStatus = {
@@ -14,7 +15,7 @@ type QuestionsNavigatorProps = {
   userAnswers: QuestionStatus[];
   step: number; // 0-based
   onSelect: (index: number) => void;
-  mode: 'immediate' | 'end';
+  mode: ExamMode;
 };
 
 export function QuestionsNavigator({

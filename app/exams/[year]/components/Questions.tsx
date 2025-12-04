@@ -5,38 +5,11 @@ import { Button } from '@/app/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import ReactMarkdown from 'react-markdown';
 import { useSearchParams } from 'next/navigation';
-import { ExamMode } from '@/app/types';
+import { ExamMode, QuestionDisipline, QuestionType } from '@/app/types';
 import { getAlternativeClasses } from '@/app/helpers/getAlternativeClasses';
 
-export type Alternative = {
-  letter: 'A' | 'B' | 'C' | 'D' | 'E';
-  text: string;
-  file: string | null;
-  isCorrect: boolean;
-};
-
-export enum QuestionDisipline {
-  'linguagens' = 'Linguagens e Código',
-  'ciencias-humanas' = 'Ciências Humanas',
-  'matematica' = 'Matemática',
-  'ciencias-natureza' = 'Ciências da Natureza',
-}
-
-export type Question = {
-  title: string;
-  index: number;
-  discipline: keyof typeof QuestionDisipline;
-  language: string;
-  year: number;
-  context: string;
-  files: string[];
-  correctAlternative: 'A' | 'B' | 'C' | 'D' | 'E';
-  alternativesIntroduction: string;
-  alternatives: Alternative[];
-};
-
-export type QuestionProps = {
-  question: Question;
+type QuestionProps = {
+  question: QuestionType;
   questionIndex: number;
   onConfirmSelect: (
     questionIndex: number,
