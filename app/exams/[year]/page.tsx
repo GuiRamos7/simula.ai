@@ -7,6 +7,7 @@ import { ExamSkeleton } from './components/ExamSkeleton';
 import { Questions } from './components/Questions';
 import { Footer } from './components/Footer';
 import { QuestionsNavigator } from './components/QuestionsNavigator';
+import { useExam } from './hooks/useExam';
 
 export type Alternative = {
   letter: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -15,10 +16,17 @@ export type Alternative = {
   isCorrect: boolean;
 };
 
+export enum QuestionDisipline {
+  'linguagens' = 'Linguagens e Código',
+  'ciencias-humanas' = 'Ciências Humanas',
+  'matematica' = 'Matemática',
+  'ciencias-natureza' = 'Ciências da Natureza',
+}
+
 export type Question = {
   title: string;
   index: number;
-  discipline: string;
+  discipline: keyof typeof QuestionDisipline;
   language: string;
   year: number;
   context: string;
@@ -50,8 +58,8 @@ const LIMIT = 50;
 export default function Home() {
   const [step, setStep] = useState(0);
   const [userResponses, setUserResponses] = useState<UserResponseProps[]>([]);
-
   const { year } = useParams();
+  const { allQuestions, isLoading } = useExam({ year: `${year}` });
   const searchParams = useSearchParams();
   const examMode = searchParams.get('mode') as 'immediate' | 'end';
   const key = searchParams.get('key');
@@ -77,30 +85,6 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem(STORAGE_STEP, String(step));
   }, [step]);
-
-  const results = useQueries({
-    queries: OFFSETS.map((offset) => ({
-      queryKey: ['questions', year, offset],
-      queryFn: () =>
-        fetch(
-          `https://api.enem.dev/v1/exams/${year}/questions?limit=${LIMIT}&offset=${offset}`,
-        ).then((res) => res.json()),
-      staleTime: THREE_DAYS_IN_MS,
-      enabled: !!year,
-    })),
-  });
-
-  const isLoading = results.some((r) => r.isLoading);
-
-  const allQuestions = useMemo(() => {
-    return Array.from(
-      new Map(
-        results
-          .flatMap((r) => r.data?.questions || [])
-          .map((q) => [q.index, q]),
-      ).values(),
-    ).sort((a, b) => a.index - b.index);
-  }, [results]);
 
   const currentQuestion = useMemo(() => {
     return allQuestions[step];
