@@ -57,7 +57,6 @@ export function Timer({
       return;
     }
 
-    // first use
     if (mode === 'regressive') {
       setTime(initialTime);
     }

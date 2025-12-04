@@ -1,5 +1,6 @@
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
-import { optionsFeedbackAnswers } from '../page';
+import { optionsFeedbackAnswers } from '../helper/optionsFeedbackAnswers';
+
 
 export type FeedbackOptionKey = keyof typeof optionsFeedbackAnswers;
 

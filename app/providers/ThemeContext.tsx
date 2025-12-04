@@ -11,8 +11,8 @@ import {
 type ThemeType = 'light' | 'dark' | 'system';
 
 type ThemeContextType = {
-  theme: ThemeType;                  // user selection
-  resolvedTheme: 'light' | 'dark';   // applied theme
+  theme: ThemeType;
+  resolvedTheme: 'light' | 'dark';
   toggleTheme: (type?: ThemeType) => void;
 };
 
@@ -25,21 +25,18 @@ const defaultContextValue: ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType>(defaultContextValue);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<ThemeType>('light'); // fallback seguro
+  const [theme, setTheme] = useState<ThemeType>('light');
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light');
 
-  // Detecta tema do sistema
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () =>
-      setSystemTheme(media.matches ? 'dark' : 'light');
+    const handler = () => setSystemTheme(media.matches ? 'dark' : 'light');
 
-    handler(); // inicial
+    handler();
     media.addEventListener('change', handler);
     return () => media.removeEventListener('change', handler);
   }, []);
 
-  // Carrega o tema salvo no localStorage
   useEffect(() => {
     const stored = localStorage.getItem('theme') as ThemeType | null;
     if (stored) {
@@ -47,7 +44,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Aplica o tema ao <html>
   useEffect(() => {
     const active = theme === 'system' ? systemTheme : theme;
 
@@ -60,19 +56,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('theme', theme);
   }, [theme, systemTheme]);
 
-  // Troca o tema (ou seta diretamente)
   const toggleTheme = (type?: ThemeType) => {
     if (type) {
       setTheme(type);
       return;
     }
 
-    setTheme(prev =>
-      prev === 'light'
-        ? 'dark'
-        : prev === 'dark'
-        ? 'system'
-        : 'light'
+    setTheme((prev) =>
+      prev === 'light' ? 'dark' : prev === 'dark' ? 'system' : 'light',
     );
   };
 

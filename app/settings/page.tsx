@@ -1,6 +1,5 @@
 'use client';
-import { useExams } from '@/app/hooks/useExams';
-import { useState } from 'react';
+import { useExamsList } from '@/app/hooks/useExamsList';
 import { Exam } from '../types';
 import { SummaryCard } from './components/SummaryCard';
 import { YearSelect } from './components/YearSelect';
@@ -8,49 +7,25 @@ import { FeedbackSelector } from './components/FeedbackSelector';
 import { TimerSelector } from './components/TimerSelector';
 import { SettingsLoadingSkeleton } from './components/SettingsSkeleton';
 import { useSettingsForm } from './hooks/useSettingsForm';
-
-export const optionsFeedbackAnswers = {
-  immediate: {
-    value: 'immediate',
-    label: 'Mostrar imediatamente',
-    description: 'As respostas serão mostradas imediatamente ao confirmar.',
-  },
-  end: {
-    value: 'end',
-    label: 'Mostrar ao final do simulado',
-    description: 'As respostas serão mostradas ao final.',
-  },
-} as const;
-
-export const optionsTimer = {
-  regressive: {
-    value: 'regressive',
-    label: 'Contagem regressiva (tempo limite)',
-    description: 'O tempo total da prova é de 5 horas e 30 minutos.',
-  },
-  progressive: {
-    value: 'progressive',
-    label: 'Contagem progressiva (marcar tempo)',
-    description:
-      'Você não tem tempo limite, leve quanto tempo precisar para completar.',
-  },
-} as const;
+import {
+  optionsFeedbackAnswers,
+  optionsTimer,
+} from './helper/optionsFeedbackAnswers';
 
 type FeedbackOption = keyof typeof optionsFeedbackAnswers;
 type TimerOption = keyof typeof optionsTimer;
 
 export default function Settings() {
-  const { data, isLoading, isError } = useExams();
+  const { data, isLoading } = useExamsList();
   const { actions, feedbackOption, timerOption, yearOption } =
     useSettingsForm();
-
 
   if (isLoading) return <SettingsLoadingSkeleton />;
 
   const examYears = (data && data.map((exam: Exam) => exam.year)) ?? [];
 
   return (
-    <div className=''>
+    <div className="">
       <div className="title mx-auto mt-8 w-5/6">
         <h1 className="pb-1 text-[22px] leading-tight font-bold tracking-[-0.015em] text-gray-900 dark:text-white">
           Configurar Simulado

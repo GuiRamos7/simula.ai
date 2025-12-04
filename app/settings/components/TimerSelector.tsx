@@ -1,5 +1,5 @@
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
-import { optionsTimer } from '../page';
+import { optionsTimer } from '../helper/optionsFeedbackAnswers';
 
 export type TimerOptionKey = keyof typeof optionsTimer;
 

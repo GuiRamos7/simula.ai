@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
-import { optionsFeedbackAnswers, optionsTimer } from '../page';
 import { useRouter } from 'next/navigation';
 import { nanoid } from 'nanoid';
+import { optionsFeedbackAnswers, optionsTimer } from '../helper/optionsFeedbackAnswers';
 
 export type FeedbackOption = keyof typeof optionsFeedbackAnswers;
 export type TimerOption = keyof typeof optionsTimer;

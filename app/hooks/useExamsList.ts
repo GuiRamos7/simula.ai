@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/app/services/api';
 
-export function useExams() {
+// List all exams available 
+export function useExamsList() {
   return useQuery({
     queryKey: ['exams'],
     queryFn: async () => {

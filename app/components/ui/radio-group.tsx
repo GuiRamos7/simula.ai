@@ -27,7 +27,6 @@ function RadioGroupItem({
       data-slot="radio-group-item"
       className={cn(
         'aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none',
-        // pink-500 styles
         'border-pink-500 text-pink-500 focus-visible:border-pink-500 focus-visible:ring-pink-500/50',
         'data-[state=checked]:bg-pink-500 data-[state=checked]:text-white',
         className,

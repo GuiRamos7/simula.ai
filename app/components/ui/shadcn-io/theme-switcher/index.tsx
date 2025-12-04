@@ -48,10 +48,9 @@ export const ThemeSwitcher = ({
     (themeKey: 'light' | 'dark' | 'system') => {
       setTheme(themeKey);
     },
-    [setTheme]
+    [setTheme],
   );
 
-  // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -63,8 +62,8 @@ export const ThemeSwitcher = ({
   return (
     <div
       className={cn(
-        'relative isolate flex h-8 rounded-full bg-background p-1 ring-1 ring-border',
-        className
+        'bg-background ring-border relative isolate flex h-8 rounded-full p-1 ring-1',
+        className,
       )}
     >
       {themes.map(({ key, icon: Icon, label }) => {
@@ -73,14 +72,14 @@ export const ThemeSwitcher = ({
         return (
           <button
             aria-label={label}
-            className="cursor-pointer relative h-6 w-6 rounded-full"
+            className="relative h-6 w-6 cursor-pointer rounded-full"
             key={key}
             onClick={() => handleThemeClick(key as 'light' | 'dark' | 'system')}
             type="button"
           >
             {isActive && (
               <motion.div
-                className="absolute inset-0 rounded-full bg-secondary"
+                className="bg-secondary absolute inset-0 rounded-full"
                 layoutId="activeTheme"
                 transition={{ type: 'spring', duration: 0.5 }}
               />
@@ -88,7 +87,7 @@ export const ThemeSwitcher = ({
             <Icon
               className={cn(
                 'relative z-10 m-auto h-4 w-4',
-                isActive ? 'text-foreground' : 'text-muted-foreground'
+                isActive ? 'text-foreground' : 'text-muted-foreground',
               )}
             />
           </button>

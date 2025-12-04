@@ -1,6 +1,7 @@
 import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { QuestionType } from '@/app/types';
+import { api } from '@/app/services/api';
 
 const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
 
@@ -26,9 +27,9 @@ export const useExam = ({ year }: useExamProps) => {
     queries: OFFSETS.map((offset) => ({
       queryKey: ['questions', year, offset],
       queryFn: async (): Promise<QuestionsAPIResponse> =>
-        await fetch(
-          `https://api.enem.dev/v1/exams/${year}/questions?limit=${LIMIT}&offset=${offset}`,
-        ).then((res) => res.json()),
+        await api
+          .get(`/exams/${year}/questions?limit=${LIMIT}&offset=${offset}`)
+          .then((res) => res.data),
       staleTime: THREE_DAYS_IN_MS,
       enabled: !!year,
     })),

@@ -13,7 +13,7 @@ type QuestionStatus = {
 type QuestionsNavigatorProps = {
   totalQuestions: number;
   userAnswers: QuestionStatus[];
-  step: number; // 0-based
+  step: number;
   onSelect: (index: number) => void;
   mode: ExamMode;
 };
