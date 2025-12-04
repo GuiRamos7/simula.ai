@@ -30,17 +30,17 @@ export const ExamSkeleton = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full border-t border-gray-300 bg-gray-100 p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800">
-        <div className="m-auto flex max-w-7xl items-center justify-between px-5">
-          <Skeleton className="h-10 w-24 rounded-md bg-gray-300 dark:bg-gray-700" />
-
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-4 w-16 bg-gray-300 dark:bg-gray-700" />
-            <Skeleton className="h-8 w-16 rounded-md bg-gray-300 dark:bg-gray-700" />
-            <Skeleton className="h-4 w-10 bg-gray-300 dark:bg-gray-700" />
+      <div className="fixed bottom-0 left-0 w-full border-t border-gray-300 bg-gray-100 py-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+        <div className="m-auto flex w-5/6 items-center justify-between px-5">
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-6 w-50 rounded bg-gray-300 dark:bg-gray-700" />
+            <Skeleton className="h-6 w-20 rounded bg-pink-500 dark:bg-pink-700" />
           </div>
-
-          <Skeleton className="h-10 w-24 rounded-md bg-indigo-500 dark:bg-indigo-700" />
+          <div className="flex gap-4">
+            <Skeleton className="h-6 w-20 rounded bg-pink-500 dark:bg-pink-700" />
+            <Skeleton className="h-6 w-10 rounded bg-gray-300 dark:bg-gray-700" />
+            <Skeleton className="h-6 w-20 rounded bg-pink-500 dark:bg-pink-700" />
+          </div>
         </div>
       </div>
     </div>
