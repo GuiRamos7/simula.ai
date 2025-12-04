@@ -52,6 +52,7 @@ export default function Home() {
   const [userResponses, setUserResponses] = useState<UserResponseProps[]>([]);
   const { year } = useParams();
   const searchParams = useSearchParams();
+  const examMode = searchParams.get('mode') as 'immediate' | 'end';
 
   useEffect(() => {
     const savedResponses = localStorage.getItem(
@@ -146,14 +147,14 @@ export default function Home() {
   return (
     <>
       <div
-        className="bg-background relative mb-30 -left-40 mx-auto mt-8"
+        className="bg-background relative -left-40 mx-auto mt-8 mb-30"
         style={{ width: `calc(83.33% - 320px)` }}
       >
         <Questions
           questionIndex={currentQuestion.index ?? 0}
           onConfirmSelect={onConfirmSelect}
           question={currentQuestion}
-          mode={searchParams.get('mode') as 'immediate' | 'end'}
+          mode={examMode}
         />
         <QuestionsNavigator
           step={step}
@@ -162,7 +163,7 @@ export default function Home() {
           onSelect={(e) => {
             console.log(e);
           }}
-          mode={searchParams.get('mode') as 'immediate' | 'end'}
+          mode={examMode}
         />
       </div>
       <Footer

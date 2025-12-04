@@ -5,6 +5,8 @@ import { Button } from '@/app/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import ReactMarkdown from 'react-markdown';
 import { useSearchParams } from 'next/navigation';
+import { ExamMode } from '@/app/types';
+import { getAlternativeClasses } from '@/app/helpers/getAlternativeClasses';
 
 export type Alternative = {
   letter: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -40,7 +42,7 @@ export type QuestionProps = {
     questionIndex: number,
     selected: 'A' | 'B' | 'C' | 'D' | 'E',
   ) => void;
-  mode: 'immediate' | 'end';
+  mode: ExamMode;
 };
 
 export const Questions = memo(
@@ -48,8 +50,6 @@ export const Questions = memo(
     const [answerSelected, setAnswerSelected] = useState<
       null | 'A' | 'B' | 'C' | 'D' | 'E'
     >(null);
-
-    console.log(answerSelected);
 
     const [showAnswer, setShowAnswer] = useState(false);
     const searchParams = useSearchParams();
@@ -76,14 +76,12 @@ export const Questions = memo(
         const isCorrect = alt.letter === question.correctAlternative;
         const isSelected = answerSelected === alt.letter;
 
-        let borderClass = 'border-pink-500/40';
-
-        if (showAnswer) {
-          if (isCorrect) borderClass = 'border-green-500 bg-green-500/10';
-          else if (isSelected && !isCorrect)
-            borderClass = 'border-red-500 bg-red-500/10';
-          else borderClass = 'opacity-50';
-        }
+        let borderClass = getAlternativeClasses({
+          isCorrect,
+          isSelected,
+          showAnswer,
+          mode,
+        });
 
         return (
           <label
@@ -124,7 +122,6 @@ export const Questions = memo(
 
     return (
       <div className="m-auto mb-30 flex w-full flex-col justify-center gap-5 p-5 lg:mb-0 lg:flex-row">
-        {/* CONTEXTO */}
         <div className="question-header max-w-2xl flex-1">
           <div className="context flex flex-col items-center overflow-y-auto pr-2 text-base leading-relaxed whitespace-pre-line text-gray-800 lg:max-h-[80vh] dark:text-gray-300">
             <div className="block h-auto w-auto p-2 text-lg">
@@ -137,7 +134,6 @@ export const Questions = memo(
           </div>
         </div>
 
-        {/* ALTERNATIVAS */}
         <div className="question-answer flex w-full flex-col gap-4 border-0 p-5 md:min-w-[300px] md:border-l-2 md:border-gray-200 lg:ml-5 lg:w-96 lg:min-w-[500px] dark:md:border-gray-700">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Questão {question.index}
