@@ -13,6 +13,8 @@ import { useCurrentQuestion } from './hooks/useCurrentQuestion';
 import { useExamNavigation } from './hooks/useExamNavigation';
 import { useConfirmAnswer } from './hooks/useConfirmAnswer';
 import { ExamMode } from '@/app/types';
+import { useCallback } from 'react';
+import { redirect, RedirectType } from 'next/navigation';
 
 export default function Home() {
   const { year } = useParams();
@@ -39,6 +41,10 @@ export default function Home() {
     saveAnswers: save,
     goNext: onNext,
   });
+
+  const handleFinishExam = useCallback(() => {
+    redirect(`/conclusion?year=${year}&key=${key}`, RedirectType.replace);
+  }, []);
 
   if (isLoading) return <ExamSkeleton />;
   if (!currentQuestion || error)
@@ -77,6 +83,7 @@ export default function Home() {
         isNextDisabled={step === allQuestions.length - 1}
         isPreviousDisabled={step === 0}
         timeMode={searchParams.get('timer') as any}
+        onFinishExam={handleFinishExam}
       />
     </>
   );

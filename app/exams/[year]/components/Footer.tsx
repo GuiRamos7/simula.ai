@@ -17,6 +17,7 @@ type FooterProps = {
   timeMode: 'progressive' | 'regressive';
   examId: string;
   onSelectPage: (page: number) => void;
+  onFinishExam: () => void;
 };
 
 export const Footer = memo(
@@ -31,6 +32,7 @@ export const Footer = memo(
     totalQuestionsAnswered,
     timeMode,
     onSelectPage,
+    onFinishExam,
   }: FooterProps) => {
     const percentComplete = (
       (totalQuestionsAnswered / totalQuestions) *
@@ -72,7 +74,12 @@ export const Footer = memo(
                 />
               </div>
             </div>
-            <Button variant="pink" size="lg" className="w-full md:w-fit">
+            <Button
+              variant="pink"
+              size="lg"
+              className="w-full md:w-fit"
+              onClick={onFinishExam}
+            >
               Finalizar Simulado
             </Button>
           </div>
