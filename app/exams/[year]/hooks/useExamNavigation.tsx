@@ -1,8 +1,22 @@
 import { useCallback } from 'react';
 
-export function useExamNavigation(setStep: (fn: (n: number) => number) => void) {
+export type UseExamNavigationProps = {
+  setStep: (fn: (n: number) => number) => void;
+  totalQuestions: number;
+};
+export function useExamNavigation({
+  setStep,
+  totalQuestions,
+}: UseExamNavigationProps) {
   const onNext = useCallback(() => {
-    setStep((prev) => prev + 1);
+    setStep((prev) => {
+      console.log(prev, totalQuestions)
+      if (prev === totalQuestions - 1) {
+        return prev;
+      }
+
+      return prev + 1;
+    });
   }, [setStep]);
 
   const onPrevious = useCallback(() => {
@@ -13,7 +27,7 @@ export function useExamNavigation(setStep: (fn: (n: number) => number) => void) 
     (page: number) => {
       setStep(() => page - 1);
     },
-    [setStep]
+    [setStep],
   );
 
   return { onNext, onPrevious, onSelectPage };

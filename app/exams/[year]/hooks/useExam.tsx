@@ -5,7 +5,7 @@ import { api } from '@/app/services/api';
 
 const THREE_DAYS_IN_MS = 1000 * 60 * 60 * 24 * 3;
 
-const OFFSETS = [0, 50, 100, 150];
+const OFFSETS = [0, 51, 101, 151];
 const LIMIT = 50;
 
 type useExamProps = {
@@ -39,13 +39,7 @@ export const useExam = ({ year }: useExamProps) => {
   const error = results.find((r) => r.error)?.error ?? null;
 
   const allQuestions = useMemo(() => {
-    return Array.from(
-      new Map(
-        results
-          .flatMap((r) => r.data?.questions ?? [])
-          .map((q) => [q.index, q]),
-      ).values(),
-    ).sort((a, b) => a.index - b.index);
+    return results.flatMap((r) => r.data?.questions ?? []);
   }, [results]);
 
   return {

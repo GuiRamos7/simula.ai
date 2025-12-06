@@ -22,12 +22,16 @@ export default function Home() {
   const STORAGE_STEP = `step-${year}-${key}`;
   const STORAGE_ANSWERS = `answers-${year}-${key}`;
 
-  const { allQuestions, isLoading, error } = useExam({ year: `${year}` });
+  const { allQuestions, isLoading, error,  } = useExam({
+    year: `${year}`,
+  });
   const { step, setStep } = usePersistedStep(STORAGE_STEP);
   const currentQuestion = useCurrentQuestion(allQuestions, step);
   const { answers, save } = usePersistedAnswers(STORAGE_ANSWERS);
-  const { onNext, onPrevious, onSelectPage } = useExamNavigation(setStep);
-
+  const { onNext, onPrevious, onSelectPage } = useExamNavigation({
+    setStep,
+    totalQuestions: allQuestions.length,
+  });
   const onConfirmSelect = useConfirmAnswer({
     storageKey: STORAGE_ANSWERS,
     allQuestions,
