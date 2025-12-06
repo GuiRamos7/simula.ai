@@ -17,7 +17,7 @@ export const SummaryCard = ({
   if (!yearOption) return null;
 
   return (
-    <div className="border-primary/20 dark:border-primary/30 mx-auto mt-8 flex w-5/6 flex-col items-center justify-between gap-6 rounded-xl border bg-pink-400/50 p-6 md:flex-row">
+    <div className="border-primary/20 dark:border-primary/30 mx-auto mt-8 mb-8 flex w-5/6 flex-col items-center justify-between gap-6 rounded-xl border bg-pink-400/50 p-6 md:flex-row">
       <div className="flex items-start gap-4">
         <FaCircleInfo className="min-w-[30px] self-center text-2xl text-pink-900 dark:text-white" />
         <div>
