@@ -95,8 +95,7 @@ export default function Conclusion() {
         </div>
 
         <div className="flex w-full flex-col gap-3 pt-4 sm:flex-row">
-          <Button variant="pink" className="max-h-10 w-full">
-            {' '}
+          <Button variant="pink" size="full" className="max-h-20 w-full">
             Voltar à Página Principal
           </Button>
         </div>
