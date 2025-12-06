@@ -22,9 +22,10 @@ export default function Home() {
   const STORAGE_STEP = `step-${year}-${key}`;
   const STORAGE_ANSWERS = `answers-${year}-${key}`;
 
-  const { allQuestions, isLoading, error,  } = useExam({
+  const { allQuestions, isLoading, error } = useExam({
     year: `${year}`,
   });
+
   const { step, setStep } = usePersistedStep(STORAGE_STEP);
   const currentQuestion = useCurrentQuestion(allQuestions, step);
   const { answers, save } = usePersistedAnswers(STORAGE_ANSWERS);
