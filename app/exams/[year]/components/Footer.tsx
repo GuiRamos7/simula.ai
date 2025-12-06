@@ -43,6 +43,11 @@ export const Footer = memo(
       setPageSelected(currentQuestionIndex);
     }, [currentQuestionIndex]);
 
+    const initialTime = useMemo(
+      () => (timeMode === 'progressive' ? 0 : 11 * 60 * 60),
+      [timeMode],
+    );
+
     return (
       <footer className="bg-background fixed inset-x-0 bottom-0 z-10 flex items-center justify-between border-t-2 border-gray-200 p-4 md:h-20 lg:h-25 dark:border-t dark:border-gray-700">
         <div className="m-auto flex w-5/6 flex-col-reverse justify-between gap-2 md:flex-row">
@@ -55,7 +60,7 @@ export const Footer = memo(
                 </p>
                 <Timer
                   mode={timeMode}
-                  initialTime={11 * 60 * 60} // 11h
+                  initialTime={initialTime}
                   storageKey={`exam-${examId}-${timeMode}`}
                   onFinish={() => alert('Seu tempo acabou!')}
                 />
