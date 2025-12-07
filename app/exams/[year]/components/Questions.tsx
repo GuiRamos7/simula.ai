@@ -94,7 +94,7 @@ export const Questions = memo(
     };
 
     return (
-      <div className="mb-30 flex w-[100%] flex-1 flex-col justify-center gap-5 p-4 lg:mb-0 lg:w-[calc(100%-280px)] lg:flex-row lg:p-5">
+      <div className="mb-30 flex w-[100%] flex-1 flex-col justify-center gap-5 p-0 lg:mb-0 lg:w-[calc(100%-280px)] lg:flex-row lg:p-5">
         <div className="question-header max-w-2xl flex-1">
           <div className="context flex flex-col items-start overflow-y-auto pr-1 text-base leading-relaxed whitespace-pre-line text-gray-800 lg:max-h-[80vh] dark:text-gray-300">
             <div className="block h-auto w-auto p-2 text-lg">

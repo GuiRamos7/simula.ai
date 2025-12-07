@@ -52,7 +52,7 @@ export const Footer = memo(
 
     return (
       <footer className="bg-background fixed inset-x-0 bottom-0 z-10 flex items-center justify-between border-t-2 border-gray-200 p-4 md:h-20 lg:h-25 dark:border-t dark:border-gray-700">
-        <div className="m-auto flex w-5/6 flex-col-reverse justify-between gap-2 md:flex-row">
+        <div className="m-auto flex w-full lg:w-5/6 flex-col-reverse justify-between gap-2 md:flex-row">
           <div className="flex w-full items-center gap-4">
             <div className="hidden flex-col gap-1.5 text-right lg:flex">
               <div className="flex items-center gap-4">

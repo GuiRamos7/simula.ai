@@ -52,7 +52,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-background mx-auto mt-8 mb-30 w-5/6">
+      <div className="bg-background mx-auto mt-8 mb-30 w-full lg:w-5/6">
         <Questions
           questionIndex={currentQuestion.index}
           onConfirmSelect={onConfirmSelect}
