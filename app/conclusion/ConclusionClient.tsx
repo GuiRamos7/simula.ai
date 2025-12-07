@@ -3,11 +3,13 @@
 import { usePersistedAnswers } from '@/app/exams/[year]/hooks/usePersistedAnswers';
 import { LuTrophy } from 'react-icons/lu';
 import { Button } from '../components/ui/button';
-import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function ConclusionClient({ key, year }: any) {
-  const STORAGE_ANSWERS = `answers-${year}-${key}`;
+export default function ConclusionClient({ storageKey, year }: any) {
+  const searchParams = useSearchParams();
+
+  const STORAGE_ANSWERS = `answers-${searchParams.get('year')}-${searchParams.get('key')}`;
   const { answers } = usePersistedAnswers(STORAGE_ANSWERS);
 
   const result = useMemo(
@@ -24,6 +26,7 @@ export default function ConclusionClient({ key, year }: any) {
     [answers],
   );
 
+  console.log(answers, 123, storageKey, year);
   const renderAnswers = useMemo(() => {
     return answers.map((answer) => {
       const isCorrect =

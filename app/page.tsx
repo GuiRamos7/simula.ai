@@ -18,7 +18,7 @@ export default function Home() {
           <Link href="/settings">
             <Button
               variant="pink"
-              className="focus:ring-primary/50 mt-8 flex h-12 w-full min-w-[84px] cursor-pointer text-base font-bold"
+              className="focus:ring-primary/50 mt-8 flex h-12 w-full max-w-[300px] min-w-[84px] cursor-pointer text-base font-bold"
             >
               Comece agora grátis
             </Button>
