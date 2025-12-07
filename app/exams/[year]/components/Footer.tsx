@@ -83,19 +83,19 @@ export const Footer = memo(
               Finalizar Simulado
             </Button>
           </div>
-          <div className="pagination flex w-full justify-between gap-3 align-middle md:justify-end">
+          <div className="pagination flex flex-nowrap w-full justify-between gap-3 align-middle md:justify-end">
             <Button
               onClick={onPrevious}
               disabled={isPreviousDisabled}
               size="lg"
               variant="secondary"
-              className="w-[45%] cursor-pointer md:w-fit"
+              className="w-fit cursor-pointer md:w-fit"
             >
               <FaChevronLeft className="mr-2 h-4 w-4" />
               Anterior
             </Button>
             <Input
-              className="h-10 max-w-fit min-w-[33px] text-center"
+              className="h-10 max-w-fit min-w-[45px] text-center"
               type="number"
               min={1}
               max={totalQuestions}
@@ -113,7 +113,7 @@ export const Footer = memo(
               disabled={isNextDisabled}
               variant="pink"
               size="lg"
-              className="w-[45%] cursor-pointer md:w-fit"
+              className="w-fit cursor-pointer md:w-fit"
             >
               Próxima
               <FaChevronRight className="ml-2 h-4 w-4" />

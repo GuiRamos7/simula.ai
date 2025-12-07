@@ -69,7 +69,7 @@ export const Questions = memo(
               <span className="text-sm font-medium">{alt.text}</span>
             ) : (
               <img
-                className="w-fit max-w-[280px]"
+                className="w-full max-w-[250px] md:max-w-[280px]"
                 src={alt.file ?? ''}
                 alt="Imagem alternativa"
               />
@@ -94,9 +94,9 @@ export const Questions = memo(
     };
 
     return (
-      <div className="m-auto mb-30 flex w-full flex-col justify-center gap-5 p-5 lg:mb-0 lg:flex-row">
+      <div className="mb-30 flex w-[100%] flex-1 flex-col justify-center gap-5 p-4 lg:mb-0 lg:w-[calc(100%-280px)] lg:flex-row lg:p-5">
         <div className="question-header max-w-2xl flex-1">
-          <div className="context flex flex-col items-center overflow-y-auto pr-2 text-base leading-relaxed whitespace-pre-line text-gray-800 lg:max-h-[80vh] dark:text-gray-300">
+          <div className="context flex flex-col items-start overflow-y-auto pr-1 text-base leading-relaxed whitespace-pre-line text-gray-800 lg:max-h-[80vh] dark:text-gray-300">
             <div className="block h-auto w-auto p-2 text-lg">
               <ReactMarkdown>
                 {!!question.context
@@ -107,7 +107,7 @@ export const Questions = memo(
           </div>
         </div>
 
-        <div className="question-answer flex w-full flex-col gap-4 border-0 p-5 md:min-w-[300px] md:border-l-2 md:border-gray-200 lg:ml-5 lg:w-96 lg:min-w-[500px] dark:md:border-gray-700">
+        <div className="question-answer flex w-full flex-col gap-4 border-0 p-4 md:min-w-[300px] md:border-l-2 md:border-gray-200 lg:ml-5 lg:w-96 lg:min-w-[500px] dark:md:border-gray-700">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Questão {question.index}
           </h2>

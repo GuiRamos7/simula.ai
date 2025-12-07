@@ -63,7 +63,7 @@ export function QuestionsNavigator({
             key={`num-${nanoid()}`}
             variant={getStatusClass(num)}
             onClick={() => onSelect(num)}
-            className={`flex h-10 items-center justify-center rounded-lg border text-sm font-semibold transition ${
+            className={`flex h-10  items-center justify-center rounded-lg border text-sm font-semibold transition ${
               isActive ? 'border-pink-500 ring-2 ring-pink-500' : ''
             }`}
           >
@@ -75,7 +75,7 @@ export function QuestionsNavigator({
   );
 
   return (
-    <aside className="bg-background fixed top-0 right-0 z-10 hidden h-screen w-[320px] overflow-y-auto border-l-2 border-gray-200 p-6 pt-20 lg:block dark:border-gray-700">
+    <aside className="bg-background fixed top-0 right-0 z-10 hidden h-screen lg:w-[280px] overflow-y-auto border-l-2 border-gray-200 p-6 pt-20 lg:block dark:border-gray-700">
       <h2 className="text-primary mb-4 text-lg font-bold">Questões</h2>
       {renderRow(renderRows())}
     </aside>

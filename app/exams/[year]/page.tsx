@@ -52,10 +52,7 @@ export default function Home() {
 
   return (
     <>
-      <div
-        className="bg-background relative -left-40 mx-auto mt-8 mb-30"
-        style={{ width: `calc(83.33% - 320px)` }}
-      >
+      <div className="bg-background mx-auto mt-8 mb-30 w-5/6">
         <Questions
           questionIndex={currentQuestion.index}
           onConfirmSelect={onConfirmSelect}
