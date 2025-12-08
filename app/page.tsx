@@ -15,14 +15,14 @@ export default function Home() {
           exames anteriores do ENEM. Prepare-se no seu ritmo, identifique seus
           pontos fracos e chegue mais perto da aprovação.
         </p>
-          <Link href="/settings">
-            <Button
-              variant="pink"
-              className="focus:ring-primary/50 mt-8 flex h-12 w-full max-w-[300px] min-w-[84px] cursor-pointer text-base font-bold"
-            >
-              Comece agora grátis
-            </Button>
-          </Link>
+        <Link href="/settings">
+          <Button
+            variant="pink"
+            className="focus:ring-primary/50 mt-8 flex h-12 w-full min-w-[84px] cursor-pointer text-base font-bold"
+          >
+            Comece agora grátis
+          </Button>
+        </Link>
       </main>
     </div>
   );
